@@ -162,8 +162,6 @@ const logout = async(req, res, next) => {
             message: "You logged Out successfully!"
         });
 
-        await req.user.save();
-        res.render("login");
     }catch(error){
         res.status(500).send(error);
     }

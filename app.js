@@ -5,6 +5,8 @@ const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 
+const PORT = process.env.PORT || 4400;
+
 app.use(cors());
 
 app.options('*', cors());
@@ -21,9 +23,9 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-                title: "My brand personal website",
+                title: "My brand",
                 version: "1.0.0",
-                description: "My brand API information",
+                description: "Personal Website",
             },  
             servers: [
                 {
@@ -65,7 +67,6 @@ console.log("Now You are connect to DB!")
 
 
 //Listern to my server
-const port = 4400;
-app.listen(port, () =>{
-    console.log('Server is listerning on port : '+port);
+app.listen(PORT, () =>{
+    console.log('Server is listerning on port : '+PORT);
 });

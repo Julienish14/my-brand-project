@@ -48,16 +48,22 @@ const protect = require('../middleware/protected')
  * @swagger
  * tags:
  *      name: User
- *      description: Users, signup, signin, and info
+ *      description: users information delete update
  */
 
+/**
+ * @swagger
+ * tags:
+ *      name: Auth
+ *      description: user signUp signIn signOut
+ */
 
 /**
  * @swagger
  * /api/v1/users/signUp:
  *     post: 
  *        summary: user sign up 
- *        tags: [User]
+ *        tags: [Auth]
  *        requestBody:
  *              required: true
  *              content:
@@ -82,7 +88,7 @@ const protect = require('../middleware/protected')
  * /api/v1/users/login:
  *     post: 
  *        summary: user sign in 
- *        tags: [User]
+ *        tags: [Auth]
  *        requestBody:
  *              required: true
  *              content:
@@ -108,7 +114,7 @@ const protect = require('../middleware/protected')
  * /api/v1/users/logout:
  *     post: 
  *        summary: user signout
- *        tags: [User]
+ *        tags: [Auth]
  *        responses:
  *                 200: 
  *                    description: user logged out
@@ -193,7 +199,7 @@ const protect = require('../middleware/protected')
  * @swagger
  * /api/v1/users/{id}:
  *      delete:
- *          summary: Remove user from the list of users
+ *          summary: delete user from list of users
  *          tags: [User]
  *          parameters:
  *              - in: path

@@ -57,6 +57,7 @@ const upload = multer({storage: storage, limits: {
  *                  description: the content of the article
  *              blogImage:
  *                  type: string
+ *                  format: binary
  *                  description: image of the article
  *              date:
  *                  type: string
@@ -91,13 +92,13 @@ const upload = multer({storage: storage, limits: {
  * @swagger
  * tags:
  *      name: article
- *      description: About blogs 
+ *      description: about articles 
  */
 
 /**
  * @swagger
  *    tags: 
- *        name: comment&like
+ *        name: comment & like
  *        description: comments and like on the article
  */
 
@@ -146,14 +147,22 @@ const upload = multer({storage: storage, limits: {
  * @swagger
  * /api/v1/articles:
  *     post: 
- *        summary: post an new article 
+ *        summary: add new article 
  *        tags: [article]
  *        requestBody:
  *              required: true
  *              content:
- *                  application/json:
+ *                  multipart/form-data:
  *                      schema:
- *                          $ref: '#/components/schemas/Posts'
+ *                          type: object
+ *                          properties:
+ *                              title: 
+ *                                 type: string
+ *                              content: 
+ *                                 type: string
+ *                              file:
+ *                                 type: string
+ *                                 format: binary
  *        responses:
  *                 200: 
  *                    description: blog added successfully
@@ -203,7 +212,7 @@ const upload = multer({storage: storage, limits: {
  * @swagger
  * /api/v1/articles/{id}:
  *      delete:
- *          summary: delete article from the db
+ *          summary: delete an article
  *          tags: [article]
  *          parameters:
  *              - in: path
@@ -224,8 +233,8 @@ const upload = multer({storage: storage, limits: {
  * @swagger
  * /api/v1/articles/{id}/comment:
  *     put: 
- *        summary: post a comments on article 
- *        tags: [comment&like]
+ *        summary: add a comment on article 
+ *        tags: [comment & like]
  *        parameters:
  *              - in: path
  *                name: id
@@ -260,7 +269,7 @@ const upload = multer({storage: storage, limits: {
  * /api/v1/articles/{id}/like:
  *     put: 
  *        summary: like an article
- *        tags: [comment&like]
+ *        tags: [comment & like]
  *        parameters:
  *              - in: path
  *                name: id
@@ -289,7 +298,7 @@ const upload = multer({storage: storage, limits: {
  * /api/v1/articles/comments/all:
  *    get:
  *       summary: get the list of all comments as Admin
- *       tags: [comment&like]
+ *       tags: [comment & like]
  *       responses:
  *          200: 
  *              description: get all the list of comments
