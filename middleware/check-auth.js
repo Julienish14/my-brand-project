@@ -1,22 +1,21 @@
 const jwt = require('jsonwebtoken');
-const User = require("../models/User")
+const User = require("../models/User");
 
 
 
 module.exports = async (req, res, next) => {
     try{
-        
         let token;
         if (
             req.headers.authorization &&
             req.headers.authorization.startsWith('Bearer')
             ) {
                 token = req.headers.authorization.split(' ')[1];
-            } else if (req.headers.cookie) {
-                token = req.headers.cookie.split(' ')[1].slice(4);
-            }
+            } else if (req.cookies) {
+                token = req.cookies.jwt;            }
+           
             const decoded =  jwt.verify(token, process.env.JWT_KEY);
-            console.log(token)
+
         const freshUser =  await User.findById(decoded.userId); 
         req.user = freshUser;
         next()

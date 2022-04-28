@@ -4,13 +4,16 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
+const cookieParser = require('cookie-parser')
+
 
 const PORT = process.env.PORT || 4400;
 
 app.use(cors());
-
 app.options('*', cors());
 app.enable('trust proxy');
+
+app.use(cookieParser());
 
 
 
