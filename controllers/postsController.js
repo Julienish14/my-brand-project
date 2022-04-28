@@ -2,8 +2,8 @@ const {path} = require('express/lib/application');
 const Post = require('../models/Post');
 
 
-
 const getAllPosts = async (req, res) => {
+
     try{
         const posts = await Post.find()
         .populate('comments', 'text commentedBy date')
@@ -12,12 +12,17 @@ const getAllPosts = async (req, res) => {
             message: "All blog post",
             posts
         });
+
     }catch(err){
-        res.json({ message: err });
+        res.status(401).json({
+             message: err 
+        });
     }
+
 }
 
 const getOnePost = async (req, res) => {
+
     try{
         const oneArticle = await Post.findById(req.params.postId)
         .populate('comments', 'text commentedBy date')

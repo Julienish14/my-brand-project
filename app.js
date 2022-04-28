@@ -1,5 +1,5 @@
-const express = require('express'); // This is for import the packege
-const app = express(); // This is for excute the package
+const express = require('express'); 
+const app = express(); 
 const mongoose = require('mongoose');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -65,12 +65,13 @@ app.get('/',(req, res) => {
 
 //Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, () => 
-console.log("Now You are connect to DB!")
+    console.log("Now You are connect to DB!")
 );
-
 
 
 //Listern to my server
 app.listen(PORT, () =>{
     console.log('Server is listerning on port : '+PORT);
 });
+
+module.exports = app
