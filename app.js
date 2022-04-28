@@ -32,11 +32,7 @@ const options = {
             },  
             servers: [
                 {
-                url: `${
-                    process.env.NODE_ENV === 'development'
-                      ? 'http://localhost:4400'
-                      : 'https://my-brand-project.herokuapp.com/'
-                  }`
+                url: 'https://my-brand-project.herokuapp.com/'
           
                 }
             ],
