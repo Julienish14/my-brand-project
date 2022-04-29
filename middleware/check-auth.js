@@ -23,6 +23,7 @@ module.exports = async (req, res, next) => {
     }catch(error){
         console.log(error)
         return res.status(401).json({
+            status: "fail",
             message: "login first!"
             
         });
