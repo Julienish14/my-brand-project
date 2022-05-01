@@ -64,8 +64,8 @@ const messageValidation = require('../validators/messageValid')
  *                          type: array
  *                          items: 
  *                            $ref: '#/components/schemas/Messages'
- *          401:
- *              description: Access denied Unauthorized 
+ *          403:
+ *              description: Access denied Forbidden
  */
 
 /**
@@ -88,6 +88,8 @@ const messageValidation = require('../validators/messageValid')
  *              application/json: 
  *                  schema: 
  *                      $ref: '#/components/schemas/Messages'
+ *          403:
+ *            description: Access denied Forbidden
  *        
  */
 
@@ -134,6 +136,8 @@ const messageValidation = require('../validators/messageValid')
  *                description: the message deleted successful
  *              404: 
  *                description: the message not found
+ *              403:
+ *                description: Access denied Forbidden
  *
  */
 
