@@ -59,7 +59,7 @@ app.use('/api/v1/messages', messageRoute);
 
 //Routers
 app.get('/',(req, res) => {
-    res.send("Here We are!");
+    res.send("Welcome to my-brand API");
 });
 
 

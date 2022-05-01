@@ -45,7 +45,7 @@ const saveApost = async (req, res) => {
     });
     try{
         const savedPost = await post.save();
-        res.status(200).json({
+        res.status(201).json({
             message: "New post added successfully!",
             savedPost
         });

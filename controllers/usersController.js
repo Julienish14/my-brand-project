@@ -85,7 +85,7 @@ const login = (req, res, next) => {
                   res.cookie('jwt', token, cookieOptions);
                 
                 return res.status(200).json({
-                    message: "Auth successful",
+                    message: "logged in successfully!",
                     token: token
                 });
             }
