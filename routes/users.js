@@ -104,6 +104,8 @@ const protect = require('../middleware/protected')
  *                                  $ref: '#/components/schemas/Users'
  *                 500:
  *                    description: failed 
+ *                 401:
+ *                    description: unauthorized!
  * 
  *                  
  */
