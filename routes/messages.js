@@ -90,6 +90,8 @@ const messageValidation = require('../validators/messageValid')
  *                      $ref: '#/components/schemas/Messages'
  *          403:
  *            description: Access denied Forbidden
+ *          404:
+ *            description: Not found
  *        
  */
 

@@ -259,6 +259,8 @@ const upload = multer({storage: storage, limits: {
  *                    description: failed to add comment
  *                 401:
  *                    description: unauthorized 
+ *                 404:
+ *                    description: Not found
  * 
  *                  
  */
@@ -288,6 +290,8 @@ const upload = multer({storage: storage, limits: {
  *                    description: failed to add a like
  *                 401:
  *                    description: unauthorized 
+ *                 404: 
+ *                    description: Not found
  * 
  *                  
  */
@@ -310,6 +314,29 @@ const upload = multer({storage: storage, limits: {
  *                            $ref: '#/components/schemas/Comments'
  *          500: 
  *              description: No comments found
+ */
+
+/**
+ * @swagger
+ * /api/v1/articles/comments/all/{id}:
+ *      delete:
+ *          summary: delete an article
+ *          tags: [comment & like]
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                schema: 
+ *                    type: string
+ *                required: true
+ *                description: article id to delete
+ *          responses: 
+ *              200: 
+ *                description: the article deleted successfully!
+ *              404: 
+ *                description: no comment found
+ *              500: 
+ *                description: server err
+ *
  */
 
 

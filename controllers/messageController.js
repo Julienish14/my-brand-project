@@ -41,7 +41,7 @@ const getOneMessage = async (req, res) => {
         });
     }catch(err){
         res.status(404).json({ 
-            message: "message Not found",
+            message: "Not found",
             err 
         });
     }
