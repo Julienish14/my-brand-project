@@ -320,7 +320,7 @@ const upload = multer({storage: storage, limits: {
  * @swagger
  * /api/v1/articles/comments/all/{id}:
  *      delete:
- *          summary: delete an article
+ *          summary: delete a commnet
  *          tags: [comment & like]
  *          parameters:
  *              - in: path
@@ -328,10 +328,10 @@ const upload = multer({storage: storage, limits: {
  *                schema: 
  *                    type: string
  *                required: true
- *                description: article id to delete
+ *                description: a comment id to delete
  *          responses: 
  *              200: 
- *                description: the article deleted successfully!
+ *                description: comment deleted successfully!
  *              404: 
  *                description: no comment found
  *              500: 
