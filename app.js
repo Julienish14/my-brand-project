@@ -32,9 +32,8 @@ const options = {
             },  
             servers: [
                 {
-                url: 'https://my-brand-project.herokuapp.com/',
-                url: 'http://localhost:4400'
-          
+                url: 'https://my-brand-project.herokuapp.com/'
+    
                 }
             ],
     },
