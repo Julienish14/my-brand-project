@@ -55,7 +55,14 @@ const messageDelete = async (req, res) => {
             deleteMessage
         });
     }catch(err){
-        res.json({ message: "Failed to delete"});
+        res.status(404).json({ 
+            message: "Not found",
+            err 
+        });
+        res.status(500).json({ 
+            message: "Failed to delete",
+            err
+        });
     }
 }
 
