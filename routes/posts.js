@@ -195,9 +195,17 @@ const upload = multer({storage: storage, limits: {
  *          requestBody:
  *              required: true
  *              content:
- *                  application/json:
+ *                  multipart/form-data:
  *                      schema:
- *                          $ref: '#/components/schemas/Posts'
+ *                          type: object
+ *                          properties:
+ *                              title: 
+ *                                 type: string
+ *                              content: 
+ *                                 type: string
+ *                              file:
+ *                                 type: string
+ *                                 format: binary
  *          responses: 
  *              200: 
  *                description: article updated successful

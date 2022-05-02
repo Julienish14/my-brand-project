@@ -29,7 +29,7 @@ const getOnePost = async (req, res) => {
         .populate('comments', 'text commentedBy date')
         .populate('likes', 'full_name');
         res.status(200).json({
-            message: "Post",
+            message: "Article",
             oneArticle
         });
     }catch(err){
