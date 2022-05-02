@@ -383,7 +383,7 @@ router.route('/comments/all/:commentId')
     .delete([checkAuth, protect], commentContro.deleteComment)
     .get([checkAuth, protect], commentContro.getOneComment)
 router.route('/comments/all')
-    .get(commentContro.getAllComments)
+    .get([checkAuth, protect], commentContro.getAllComments)
 
 
 module.exports = router;
