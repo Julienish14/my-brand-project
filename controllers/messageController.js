@@ -40,7 +40,10 @@ const getOneMessage = async (req, res) => {
             getAmessage
         });
     }catch(err){
-        res.json({ message: err });
+        res.status(404).json({ 
+            message: "message Not found",
+            err 
+        });
     }
 }
 

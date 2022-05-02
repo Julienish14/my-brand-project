@@ -9,13 +9,14 @@ const getAllPosts = async (req, res) => {
         .populate('comments', 'text commentedBy date')
         .populate('likes', 'full_name');
         res.status(200).json({
-            message: "All blog post",
+            message: "All articles created",
             posts
         });
 
     }catch(err){
-        res.status(401).json({
-             message: err 
+        res.status(500).json({
+             message: 'No article found',
+             err 
         });
     }
 
@@ -32,7 +33,10 @@ const getOnePost = async (req, res) => {
             oneArticle
         });
     }catch(err){
-        res.json({ message: err });
+        res.status(404).json({ 
+            message: 'article Not found',
+            err
+        });
     }
  }
 
@@ -46,11 +50,14 @@ const saveApost = async (req, res) => {
     try{
         const savedPost = await post.save();
         res.status(201).json({
-            message: "New post added successfully!",
+            message: "New article created successfully!",
             savedPost
         });
     }catch(err){
-            res.json({message: err});
+            res.status(500).json({
+                message: 'Failed to create an article',
+                err
+            });
     }
 }
 
@@ -60,12 +67,15 @@ const deleteOnePost =async (req, res) => {
     try{
         const removedPost = await Post.deleteOne({ _id: req.params.postId });
 
-        res.json({
-            message: "Post deleted!", 
+        res.status(200).json({
+            message: "article deleted successfully!", 
             removedPost
         });
     }catch(err){
-        res.json({ message: err});
+        res.status(500).json({ 
+            message: 'Not deleted',
+            err
+        });
     }
 }
 
@@ -79,12 +89,13 @@ const updatePost = async (req, res) => {
             },
             
         });
-        res.json({
+        res.status(200).json({
             message:"Blog-post updated successfully!",
             updatedPost
         });
     }catch(err){
-        res.json({ message: "Update fails",
+        res.status(500).json({ 
+            message: "Update fails",
             err
         });
     }
@@ -105,8 +116,7 @@ const like = async(req, res, next) => {
     res.status(200).json({
         status: 'success',
         data: {
-            article
-            
+            article 
         }
     });
 }

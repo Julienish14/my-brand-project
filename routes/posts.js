@@ -223,7 +223,7 @@ const upload = multer({storage: storage, limits: {
  *                description: article id to delete
  *          responses: 
  *              200: 
- *                description: the article deleted successful
+ *                description: the article deleted successfully!
  *              404: 
  *                description: the article not found
  *
@@ -285,7 +285,7 @@ const upload = multer({storage: storage, limits: {
  *                              schema:
  *                                  $ref: '#/components/schemas/Posts'
  *                 500:
- *                    description: failed to add comment
+ *                    description: failed to add a like
  *                 401:
  *                    description: unauthorized 
  * 
@@ -308,6 +308,8 @@ const upload = multer({storage: storage, limits: {
  *                          type: array
  *                          items: 
  *                            $ref: '#/components/schemas/Comments'
+ *          500: 
+ *              description: No comments found
  */
 
 

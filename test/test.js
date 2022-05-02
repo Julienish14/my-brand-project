@@ -126,7 +126,7 @@ describe('My brand api testing', () => {
                         .end((err, res) => {
                             res.should.have.status(201);
                             res.body.should.be.a('object');
-                            res.body.should.have.property('message', 'New post added successfully!');
+                            res.body.should.have.property('message', 'article created successfully!');
                             done();
                         })
                 });                   
