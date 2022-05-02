@@ -117,6 +117,8 @@ const upload = multer({storage: storage, limits: {
  *                          type: array
  *                          items: 
  *                            $ref: '#/components/schemas/Posts'
+ *          500:
+ *              description: internal sever error
  */
 
 /**
@@ -139,6 +141,10 @@ const upload = multer({storage: storage, limits: {
  *              application/json: 
  *                  schema: 
  *                      $ref: '#/components/schemas/Posts'
+ *          404: 
+ *             description: Not found
+ *          500:
+ *             description: internal sever error
  *        
  */
 
