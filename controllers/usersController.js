@@ -149,6 +149,10 @@ const updateUser = async(req, res) => {
                 updateUser
             });
    } catch (error) {
+        res.status(404).json({
+            status: "fail",
+            message: "user Not found"
+        });
        res.status(500).json({
            status: "fail",
            message: "fail to update profile"
