@@ -213,6 +213,8 @@ const upload = multer({storage: storage, limits: {
  *                description: article not found
  *              401:
  *                description: unauthorized 
+ *              500: 
+ *                description: Internal sever error
  *
  */
 

@@ -72,6 +72,10 @@ const deleteOnePost =async (req, res) => {
             removedPost
         });
     }catch(err){
+        res.status(404).json({ 
+            message: 'article Not found',
+            err
+        });
         res.status(500).json({ 
             message: 'Not deleted',
             err
@@ -94,6 +98,10 @@ const updatePost = async (req, res) => {
             updatedPost
         });
     }catch(err){
+        res.status(404).json({ 
+            message: 'article Not found',
+            err
+        });
         res.status(500).json({ 
             message: "Update fails",
             err
