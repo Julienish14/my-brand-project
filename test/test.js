@@ -21,13 +21,13 @@ describe('My brand api testing', () => {
             });
         });
     });
-    
+    /*
     //users 
     describe('should test users signup', ()=>{
         it('should sign new user', done => {
             const user = {
               full_name: 'Julien ishimwe',
-              email: 'julish123@gmail.com',
+              email: 'julish11@gmail.com',
               password: 'julish123'
             };
                serChai
@@ -39,7 +39,7 @@ describe('My brand api testing', () => {
                 expect(res.body.error).to.be.equal(undefined);
                 done();
             });       
-        }).timeout(20000);
+        }).timeout(15000);
 
         it('should throw a message Email already exist', done => {
             const user = {
@@ -55,7 +55,7 @@ describe('My brand api testing', () => {
                 res.body.should.have.property('message', 'Email already Exist');
                 done();
                 });
-        }).timeout(20000);
+        }).timeout(15000);
 
         
         it('Should throw error when there\'s validation error', done => {
@@ -73,7 +73,7 @@ describe('My brand api testing', () => {
 
                 done();
                 });
-        }).timeout(20000);
+        }).timeout(15000);
 
         // it('Should GET all the users', done => {
             
@@ -97,9 +97,11 @@ describe('My brand api testing', () => {
                 res.body.should.have.property('message', 'logged in successfully!');
                 done();
               });
-          }).timeout(20000);
+          }).timeout(25000);
     });
     
+    */
+   
     //Post articles 
 
     describe('Create, get, get one, update, delete article', () =>{
@@ -130,10 +132,11 @@ describe('My brand api testing', () => {
                             done();
                         })
                 });                   
-		}).timeout(20000);
+		}).timeout(15000);
     });
 
-/*
+    /*
+
     it('should register + login a user, create blog and verify 1 in DB', done => {
         // 1) Register new user
         const user = {

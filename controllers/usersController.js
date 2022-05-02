@@ -85,9 +85,10 @@ const login = (req, res, next) => {
                   res.cookie('jwt', token, cookieOptions);
                 
                 return res.status(200).json({
-                    message: "Auth successful",
+                    message: "logged in successfully!",
                     token: token
                 });
+                
             }
             return res.status(401).json({
                 message: "Invalid email or password"
@@ -111,7 +112,10 @@ const getAllUsers = async (req, res) => {
             users
         });
     }catch(err){
-        res.json({ message: "Fail to get users" });
+        res.status.json({ 
+            status: "fail",
+            message: "Fail to get users" 
+        });
     }
 }
 
@@ -123,35 +127,51 @@ const getSpecificUser = async (req, res) => {
             user
         });
     }catch(err){
-        res.json({ message: "Fail to get all users" });
+        res.status(500).json({ 
+            status: "fail",
+            message: "Fail to get all users" 
+        });
     }
 }
 
 const updateUser = async(req, res) => {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-    const updateUser = await User.updateOne(
-        { _id: req.params.userId }, 
-            { $set: {full_name: req.body.full_name,
-                 email: req.body.email.toLowerCase(),
-                    password: req.body.password
-        },  
-        });
-        res.status(200).json({
-            message:"User update is made!",
-            updateUser
-        });
+   try {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        const updateUser = await User.updateOne(
+            { _id: req.params.userId }, 
+                { $set: {full_name: req.body.full_name,
+                    email: req.body.email.toLowerCase(),
+                        password: req.body.password
+            },  
+            });
+            res.status(200).json({
+                message:"user profile updated successfully!",
+                updateUser
+            });
+   } catch (error) {
+       res.status(500).json({
+           status: "fail",
+           message: "fail to update profile"
+       });
+   }
         
 }
 
 const deleteUser = async (req, res) => {
     try{
-        const deleteUser = await User.deleteOne({ _id: req.params.userId });
+        const deleteUser = await User
+            .deleteOne({
+                 _id: req.params.userId 
+            });
         res.status(200).json({
             message: "User deleted!",
             deleteUser
         });
     }catch(err){
-        res.json({ message: "Failed to delete"});
+        res.status(500).json({ 
+            status: "fail",
+            message: "Failed to delete"
+        });
     }
 }
 
