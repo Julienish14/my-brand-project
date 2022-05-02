@@ -193,6 +193,8 @@ const protect = require('../middleware/protected')
  *                description: users profile updated successful
  *              404: 
  *                description: user not found
+ *              500:
+ *                description: internal server error
  *
  */
 

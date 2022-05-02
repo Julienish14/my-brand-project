@@ -11,10 +11,10 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function(req , file, cb) {
-        cb(null, './uploads')
+        cb(null, './uploads');
     },
     filename: function(req, file, cb){
-        cb(null, new Date().getTime()+ '-' + file.originalname)
+        cb(null, new Date().getTime()+ '-' + file.originalname);
     }
 });
 
@@ -383,7 +383,7 @@ router.route('/comments/all/:commentId')
     .delete([checkAuth, protect], commentContro.deleteComment)
     .get([checkAuth, protect], commentContro.getOneComment)
 router.route('/comments/all')
-    .get([checkAuth, protect], commentContro.getAllComments)
+    .get([checkAuth, protect], commentContro.getAllComments);
 
 
 module.exports = router;

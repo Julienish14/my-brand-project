@@ -32,8 +32,4 @@ const PostSchema = mongoose.Schema({
      },
 });
 
-PostSchema.virtual('Total.likes').get(function(){
-    return " Total likes "+this.likes.length;
-});
-
 module.exports = mongoose.model('Posts', PostSchema);
