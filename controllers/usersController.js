@@ -128,18 +128,26 @@ const getSpecificUser = async (req, res) => {
 }
 
 const updateUser = async(req, res) => {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-    const updateUser = await User.updateOne(
-        { _id: req.params.userId }, 
-            { $set: {full_name: req.body.full_name,
-                 email: req.body.email.toLowerCase(),
-                    password: req.body.password
-        },  
-        });
-        res.status(200).json({
-            message:"User update is made!",
-            updateUser
-        });
+    
+    try {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        const updateUser = await User.updateOne(
+            { _id: req.params.userId }, 
+                { $set: {full_name: req.body.full_name,
+                     email: req.body.email.toLowerCase(),
+                        password: req.body.password
+            },  
+            });
+            res.status(200).json({
+                message:"updated successfully!",
+                updateUser
+            });
+    } catch (error) {
+        res.status(500).json({
+            status: "fail",
+            error
+        })
+    }
         
 }
 
@@ -151,7 +159,14 @@ const deleteUser = async (req, res) => {
             deleteUser
         });
     }catch(err){
-        res.json({ message: "Failed to delete"});
+        res.status(404).json({ 
+            message: "user not found",
+            err
+        });
+        res.status(500).json({ 
+            message: "Failed to delete",
+            err
+        });
     }
 }
 
@@ -159,11 +174,14 @@ const logout = async(req, res, next) => {
     try{
         res.clearCookie("jwt");
         res.status(200).json({
+            status: 'success',
             message: "You logged Out successfully!"
         });
 
     }catch(error){
-        res.status(500).send(error);
+        res.status(500).json({
+            error
+        });
     }
 }
 

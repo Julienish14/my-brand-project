@@ -21,13 +21,13 @@ describe('My brand api testing', () => {
             });
         });
     });
-    /*
+    
     //users 
     describe('should test users signup', ()=>{
         it('should sign new user', done => {
             const user = {
-              full_name: 'Julien ishi',
-              email: 'julish1@gmail.com',
+              full_name: 'Julien ishimwe',
+              email: 'julish123@gmail.com',
               password: 'julish123'
             };
                serChai
@@ -99,7 +99,7 @@ describe('My brand api testing', () => {
               });
           }).timeout(20000);
     });
-    */
+    
     //Post articles 
 
     describe('Create, get, get one, update, delete article', () =>{
