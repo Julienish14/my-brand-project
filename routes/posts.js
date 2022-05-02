@@ -166,11 +166,11 @@ const upload = multer({storage: storage, limits: {
  *                                 type: string
  *                              content: 
  *                                 type: string
- *                              file:
+ *                              blogImage:
  *                                 type: string
  *                                 format: binary
  *        responses:
- *                 200: 
+ *                 201: 
  *                    description: blog added successfully
  *                    content:
  *                          application/json: 
@@ -209,7 +209,7 @@ const upload = multer({storage: storage, limits: {
  *                                 type: string
  *                              content: 
  *                                 type: string
- *                              file:
+ *                              blogImage:
  *                                 type: string
  *                                 format: binary
  *          responses: 
@@ -372,7 +372,7 @@ router.route('/:postId')
 //Delete Article
         .delete([checkAuth, protect], postsController.deleteOnePost)
 //Update Article
-        .patch([checkAuth, protect],upload.single('blogImage'), postsController.updatePost);
+        .patch([checkAuth, protect], upload.single('blogImage'), postsController.updatePost);
 
 
 //comment on Article

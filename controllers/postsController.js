@@ -54,6 +54,7 @@ const saveApost = async (req, res) => {
             savedPost
         });
     }catch(err){
+        console.log(err)
             res.status(500).json({
                 message: 'Failed to create an article',
                 err
