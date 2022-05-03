@@ -5,7 +5,7 @@ orbs:
 
 jobs:
   build_and_test:
-    machine:
+    docker:
       - image: cimg/node:17.2.0
     steps:
       - checkout
@@ -22,8 +22,8 @@ jobs:
           paths:
             - .
 
-  deploy: my-brand # this can be any name you choose
-    machine:
+  deploy: # this can be any name you choose
+    docker:
       - image: cimg/node:17.2.0
     steps:
       - attach_workspace:
