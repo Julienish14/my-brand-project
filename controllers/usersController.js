@@ -30,7 +30,9 @@ const signUp = (req, res, next) => {
                             console.log(result)
                             res.status(201).json({
                                 message: 'User Created Successfully!',
-                                user
+                                data: {
+                                    user
+                                }
                             })
                         })
                         .catch(err => {
@@ -48,12 +50,12 @@ const signUp = (req, res, next) => {
 
 
 const login = (req, res, next) => {
-    User.find({email: req.body.email.toLowerCase()})
+    User.find({email: req.body.email})
     .exec()
     .then(user => {
         if(user.length < 1){
             return res.status(401).json({
-                message: "Auth failed"
+                message: "You have no account! Please SignUp"
             });
         }
         bcrypt.compare(req.body.password, user[0].password, (err, result) => {
@@ -112,7 +114,7 @@ const getAllUsers = async (req, res) => {
             users
         });
     }catch(err){
-        res.status.json({ 
+        res.status(500).json({ 
             status: "fail",
             message: "Fail to get users" 
         });
@@ -144,6 +146,7 @@ const updateUser = async(req, res) => {
                         password: req.body.password
             },  
             });
+            console.log(updateUser)
             res.status(200).json({
                 message:"user profile updated successfully!",
                 updateUser
@@ -172,6 +175,10 @@ const deleteUser = async (req, res) => {
             deleteUser
         });
     }catch(err){
+        res.status(404).json({
+            status: "fail",
+            message: "user Not found"
+        });
         res.status(500).json({ 
             status: "fail",
             message: "Failed to delete"

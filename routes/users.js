@@ -217,6 +217,8 @@ const protect = require('../middleware/protected')
  *                description: the user deleted successful
  *              404: 
  *                description: user not found
+ *              500:
+ *                description: internal sever error
  *
  */
 

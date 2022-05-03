@@ -9,14 +9,19 @@ const messagePost = async(req, res) => {
     })
 
     try{
-           const savedMessage = await message.save();
-           res.status(200).json({
-               message: "Message saved successfully!",
-               savedMessage
+           await message.save();
+           res.status(201).json({
+               message: "Message submitted successfully!",
+               data:{
+                   message
+               }
            });
         
     }catch(err){
-        res.json({message: "Not saved!"});
+        res.status(500).json({
+            status: "fail",
+            message: "Not saved!"
+        });
     }
 }
 
@@ -27,6 +32,7 @@ const messageGet = async (req, res) => {
             message: "All Messages",
             getMessages
         });
+        // console.log(getMessages)
     }catch(err){
         res.json({ message: "Fail" });
     }

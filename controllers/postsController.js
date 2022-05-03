@@ -9,7 +9,7 @@ const getAllPosts = async (req, res) => {
         .populate('comments', 'text commentedBy date')
         .populate('likes', 'full_name');
         res.status(200).json({
-            message: "All articles created",
+            message: "All created articles",
             posts
         });
 
@@ -41,17 +41,19 @@ const getOnePost = async (req, res) => {
  }
 
 const saveApost = async (req, res) => {
-    console.log(req.file);
     const post = new Post({
         title: req.body.title, 
         content: req.body.content,
         blogImage: req.file ?  req.file.path: ''
     });
     try{
-        const savedPost = await post.save();
+        await post.save();
+        console.log(post);
         res.status(201).json({
             message: "New article created successfully!",
-            savedPost
+            data: {
+                post
+            }
         });
     }catch(err){
         console.log(err)

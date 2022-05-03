@@ -19,7 +19,9 @@ const commentOnArticle = async(req, res, next) =>{
 
     return res.status(200).send({
         message: "Your comment is saved successfully!",
-        saveComment
+        data: {
+            saveComment
+        }
     });
 }
 
@@ -48,6 +50,8 @@ const deleteComment =async (req, res) => {
 const getAllComments = async (req, res) => {
     try{
         const allComm = await commentModel.find()
+
+        // console.log(allComm);
         
         res.status(200).json({
             message: "All comments",
