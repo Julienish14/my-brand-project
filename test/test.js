@@ -18,6 +18,7 @@ const serChai = chai.request(server).keepOpen();
 
 describe('My brand api testing', () => {
     
+    
     describe('Welcome to api', ()=>{
         it('should return welcome text from server', done =>{
             chai.request(server)
@@ -46,7 +47,7 @@ describe('My brand api testing', () => {
                 expect(res.body.error).to.be.equal(undefined);
                 done();
             });       
-        }).timeout(30000);
+        }).timeout(10000);
 
         it('should throw a message Email already exist', done => {
             const user = {
@@ -288,29 +289,7 @@ describe('My brand api testing', () => {
             })
         }).timeout(15000); 
         
-        //GET all comments 
-
-        it('should GET all commet as an admin', done =>{
-          serChai 
-              .post('/api/v1/users/login')
-              .send({email: 'julish123@gmail.com', password: 'julish123'})
-              .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('token');
-                
-                let token = res.body.token;
-                serChai
-                    .get('/api/v1/articles/comments/all')
-                    .set({'Cookie': `jwt=${token}`})
-                    .end((err, res)=>{
-                      expect(res.status).to.be.equal(200);
-                      expect(res.body).to.be.a('object');
-                      res.body.should.have.property('message', 'All comments');
-                      done();
-                    });
-              });
-        }).timeout(15000);
+        
 
      
         it('should get all the articles in db', done =>{
@@ -462,9 +441,78 @@ describe('My brand api testing', () => {
                 }); 
             });
           });
-      }).timeout(20000);
+      });
   });
 
+  
+  //COMMENTS ROUTES
+    describe('Test comments routes', ()=> {
+      //GET all comments 
+        it('should GET all commet as an admin', done =>{
+          serChai 
+              .post('/api/v1/users/login')
+              .send({email: 'julish123@gmail.com', password: 'julish123'})
+              .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('token');
+                
+                let token = res.body.token;
+                serChai
+                    .get('/api/v1/articles/comments/all')
+                    .set({'Cookie': `jwt=${token}`})
+                    .end((err, res)=>{
+                      expect(res.status).to.be.equal(200);
+                      expect(res.body).to.be.a('object');
+                      res.body.should.have.property('message', 'All comments');
+                      done();
+                    });
+              });
+        });
+
+        //Test Post a comment
+
+        it('should add article and post on it', done => {
+          const article = {title: 'The article to test for a comment', content: 'the content for comment test'}
+          serChai
+            .post('/api/v1/users/login')
+            .send({email: 'julish123@gmail.com', password: 'julish123'})
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('token');
+              
+              let token = res.body.token;
+
+                serChai
+                  .post('/api/v1/articles')
+                  .set({'Cookie': `jwt=${token}`})
+                  .send(article)
+                  .end((err, res) => {
+                      expect(res.status).to.equal(201);
+                      expect(res.body).to.be.a('object');
+
+                      const newArt = res.body.data.post
+                      expect(newArt.title).to.be.equal(article.title)
+                      expect(newArt.content).to.be.equal(article.content)
+
+                      const postId = newArt._id;
+                      serChai
+                        .put(`/api/v1/articles/${postId}/comment`)
+                        .set({'Cookie': `jwt=${token}`})
+                        .send({text: 'this is good topic Thank you!'})
+                        .end((err, res) =>{
+                              expect(res.status).to.equal(200);
+                              expect(res.body).to.be.a('object');
+                              res.body.should.have.property('message', 'Your comment is saved successfully!');
+                        });
+                        done();
+                  });
+              }); 
+          });
+       
+    });
+    
 
  
  
