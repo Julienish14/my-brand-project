@@ -1,16 +1,7 @@
-const mongoose = require('mongoose');
-const User = require('../models/User');
-
 const chai = require('chai');
-const mocha = require('mocha');
 const chaiHttp = require('chai-http');
 const server = require('../app.js');
 
-
-const request = require('supertest')(server);
-const { use } = require('chai');
-const { timeout } = require('nodemon/lib/config');
-const { post } = require('superagent');
 const expect = chai.expect
 const should = chai.should()
 chai.use(chaiHttp)
@@ -27,7 +18,7 @@ describe('My brand api testing', () => {
                 res.should.have.status(200);
                 done();
             });
-        });
+        }).timeout(30000);
     });
     
     //users 
@@ -35,8 +26,8 @@ describe('My brand api testing', () => {
         it('should sign new user', done => {
             const user = {
               full_name: 'Julien ishimwe',
-              email: 'julish1@gmail.com',
-              password: 'julish123'
+              email: 'julish1234@gmail.com',
+              password: 'julish1234'
             };
                serChai
                 .post('/api/v1/users/signUp')
@@ -468,47 +459,6 @@ describe('My brand api testing', () => {
                     });
               });
         }).timeout(30000);
-
-        //Test Post a comment
-
-        // it('should add article and post on it', done => {
-        //   const article = {title: 'The article to test for a comment', content: 'the content for comment test'}
-        //   serChai
-        //     .post('/api/v1/users/login')
-        //     .send({email: 'julish123@gmail.com', password: 'julish123'})
-        //     .end((err, res) => {
-        //       res.should.have.status(200);
-        //       res.body.should.be.a('object');
-        //       res.body.should.have.property('token');
-              
-        //       let token = res.body.token;
-
-        //         serChai
-        //           .post('/api/v1/articles')
-        //           .set({'Cookie': `jwt=${token}`})
-        //           .send(article)
-        //           .end((err, res) => {
-        //               expect(res.status).to.equal(201);
-        //               expect(res.body).to.be.a('object');
-
-        //               const newArt = res.body.data.post
-        //               expect(newArt.title).to.be.equal(article.title)
-        //               expect(newArt.content).to.be.equal(article.content)
-
-        //               const postId = newArt._id;
-        //               serChai
-        //                 .put(`/api/v1/articles/${postId}/comment`)
-        //                 .set({'Cookie': `jwt=${token}`})
-        //                 .send({text: 'this is good topic Thank you!'})
-        //                 .end((err, res) =>{
-        //                       expect(res.status).to.equal(200);
-        //                       expect(res.body).to.be.a('object');
-        //                       res.body.should.have.property('message', 'Your comment is saved successfully!');
-        //                 done();
-        //                 });
-        //           });
-        //       }); 
-        // }).timeout(25000);
        
     });
     
