@@ -27,7 +27,7 @@ const signUp = (req, res, next) => {
                     user
                         .save()
                         .then(result => {
-                            console.log(result)
+                            // console.log(result)
                             res.status(201).json({
                                 message: 'User Created Successfully!',
                                 data: {
@@ -146,7 +146,7 @@ const updateUser = async(req, res) => {
                         password: req.body.password
             },  
             });
-            console.log(updateUser)
+            // console.log(updateUser)
             res.status(200).json({
                 message:"user profile updated successfully!",
                 updateUser

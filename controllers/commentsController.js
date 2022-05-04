@@ -16,7 +16,6 @@ const commentOnArticle = async(req, res, next) =>{
             $push: {comments: saveComment._id}
         }
     )
-    console.log(saveComment._id);
     return res.status(200).send({
         message: "Your comment is saved successfully!",
         data: {

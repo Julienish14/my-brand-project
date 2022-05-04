@@ -47,7 +47,7 @@ describe('My brand api testing', () => {
                 expect(res.body.error).to.be.equal(undefined);
                 done();
             });       
-        }).timeout(10000);
+        }).timeout(25000);
 
         it('should throw a message Email already exist', done => {
             const user = {
@@ -280,15 +280,14 @@ describe('My brand api testing', () => {
                                       .end((err, res) => {
                                           expect(res.status).to.equal(200);
                                           expect(res.body).to.be.a('object');
-                                          res.body.should.have.property('message', 'comment deleted!');  
+                                          res.body.should.have.property('message', 'comment deleted!');
+                                          
                                       })
                           });
-                      
+                          done();
               })
-              done();
             })
-        }).timeout(15000); 
-        
+        }).timeout(30000); 
         
 
      
@@ -303,14 +302,14 @@ describe('My brand api testing', () => {
         }).timeout(30000);
 
         it('should add article, update and delete', done => {
-          const new_one = {
-            title: 'This is the new article to be updated and after deleted',
-            content: 'this is the content of the article'
-          };
-          const update_one = {
-            title: 'Now this article is updated and it gonna be deleted',
-            content: 'this is the content of the article'
-          };
+            const new_one = {
+              title: 'This is the new article to be updated and after deleted',
+              content: 'this is the content of the article'
+            };
+            const update_one = {
+              title: 'Now this article is updated and it gonna be deleted',
+              content: 'this is the content of the article'
+            };
           serChai
             .post('/api/v1/users/login')
             .send({email: 'julish123@gmail.com', password: 'julish123'})
@@ -333,26 +332,26 @@ describe('My brand api testing', () => {
                   expect(newArt.content).to.be.equal(new_one.content)
 
                   const postId = newArt._id;
-          serChai
-              .patch(`/api/v1/articles/${postId}`)
-              .set({'Cookie': `jwt=${token}`})
-              .send(update_one)
-              .end((err, res) =>{
-                  expect(res.status).to.equal(200);
-                  expect(res.body).to.be.a('object');
-              })
+                serChai
+                    .patch(`/api/v1/articles/${postId}`)
+                    .set({'Cookie': `jwt=${token}`})
+                    .send(update_one)
+                    .end((err, res) =>{
+                        expect(res.status).to.equal(200);
+                        expect(res.body).to.be.a('object');
+                    })
 
-          serChai
-              .delete(`/api/v1/articles/${postId}`)
-              .set({'Cookie': `jwt=${token}`})
-              .end((err, res) =>{
-                  expect(res.status).to.equal(200);
-                  expect(res.body).to.be.a('object');
-                done();
-              })
+                serChai
+                    .delete(`/api/v1/articles/${postId}`)
+                    .set({'Cookie': `jwt=${token}`})
+                    .end((err, res) =>{
+                        expect(res.status).to.equal(200);
+                        expect(res.body).to.be.a('object');
+                      done();
+                    })
           });
-        }).timeout(30000);
-      });
+        });
+      }).timeout(30000);
     
   
                                   
@@ -386,7 +385,7 @@ describe('My brand api testing', () => {
                   done();
               });
           })
-      }).timeout(20000);
+      }).timeout(30000);
 
       // POST, GET and Delete message
       
@@ -441,7 +440,7 @@ describe('My brand api testing', () => {
                 }); 
             });
           });
-      });
+      }).timeout(30000);
   });
 
   
@@ -468,7 +467,7 @@ describe('My brand api testing', () => {
                       done();
                     });
               });
-        });
+        }).timeout(30000);
 
         //Test Post a comment
 
@@ -505,11 +504,11 @@ describe('My brand api testing', () => {
                               expect(res.status).to.equal(200);
                               expect(res.body).to.be.a('object');
                               res.body.should.have.property('message', 'Your comment is saved successfully!');
-                        });
                         done();
+                        });
                   });
               }); 
-          });
+        }).timeout(25000);
        
     });
     
