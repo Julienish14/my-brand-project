@@ -29,19 +29,15 @@ const deleteComment =async (req, res) => {
     try{
         const commentRemove = await commentModel.deleteOne({ _id: req.params.commentId });
 
-        res.status(200).json({
+       return res.status(200).json({
             message: "comment deleted!",
             commentRemove
         });
 
     } catch (err) {
-        res.status(404).json({ 
+        return res.status(404).json({ 
             message: 'comment Not found',
             err
-        });
-        res.status(500).json({ 
-            message: 'No comment found',
-            err 
         });
     }
 }
@@ -52,12 +48,12 @@ const getAllComments = async (req, res) => {
 
         // console.log(allComm);
         
-        res.status(200).json({
+        return res.status(200).json({
             message: "All comments",
             allComm
         });
     } catch (err) {
-        res.status(500).json({ 
+        return res.status(500).json({ 
             message: 'No comment found',
             err 
         });
@@ -67,12 +63,12 @@ const getAllComments = async (req, res) => {
 const getOneComment = async (req, res) => {
     try{
         const singleComm = await commentModel.findById(req.params.commentId)
-        res.status(200).json({
+       return res.status(200).json({
             message: "Comment",
             singleComm
         });
     } catch (err) {
-        res.status(404).json({ 
+        return res.status(404).json({ 
             message: 'comment Not found',
             err
         });

@@ -147,19 +147,15 @@ const updateUser = async(req, res) => {
             },  
             });
             // console.log(updateUser)
-            res.status(200).json({
+           return res.status(200).json({
                 message:"user profile updated successfully!",
                 updateUser
             });
    } catch (error) {
-        res.status(404).json({
+        return res.status(404).json({
             status: "fail",
             message: "user Not found"
         });
-       res.status(500).json({
-           status: "fail",
-           message: "fail to update profile"
-       });
    }
         
 }
@@ -167,21 +163,17 @@ const updateUser = async(req, res) => {
 const deleteUser = async (req, res) => {
     try{
         const deleteUser = await User
-            .deleteOne({
+            .deleteMany({
                  _id: req.params.userId 
             });
-        res.status(200).json({
+       return res.status(200).json({
             message: "User deleted!",
             deleteUser
         });
     }catch(err){
-        res.status(404).json({
+        return res.status(404).json({
             status: "fail",
             message: "user Not found"
-        });
-        res.status(500).json({ 
-            status: "fail",
-            message: "Failed to delete"
         });
     }
 }

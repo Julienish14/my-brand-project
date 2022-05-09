@@ -1,6 +1,8 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app.js');
+const Users = require('../models/User');
+const Articles = require('../models/Post');
 
 const expect = chai.expect
 const should = chai.should()
@@ -23,10 +25,11 @@ describe('My brand api testing', () => {
     
     //users 
     describe('should test users signup', ()=>{
+  
         it('should sign new user', done => {
             const user = {
               full_name: 'Julien ishimwe',
-              email: 'julish1234@gmail.com',
+              email: 'julish1@gmail.com',
               password: 'julish1234'
             };
                serChai
@@ -37,7 +40,10 @@ describe('My brand api testing', () => {
                 expect(res.body).to.be.a('object');
                 expect(res.body.error).to.be.equal(undefined);
                 done();
-            });       
+            });   
+            afterEach(async () => {
+              await Users.deleteOne({email: "julish1@gmail.com"})
+            })
         }).timeout(25000);
 
         it('should throw a message Email already exist', done => {
@@ -73,6 +79,8 @@ describe('My brand api testing', () => {
                 done();
                 });
         }).timeout(30000);
+
+      
 
     });
 
@@ -147,6 +155,10 @@ describe('My brand api testing', () => {
                     done();
                     })
                 });
+              })
+
+              afterEach(async () => {
+                await Users.deleteOne({email: "greatkan2@gmail.com"})
               })
           }).timeout(30000);   
           
@@ -278,6 +290,8 @@ describe('My brand api testing', () => {
                           done();
               })
             })
+
+
         }).timeout(30000); 
         
 
@@ -344,7 +358,9 @@ describe('My brand api testing', () => {
         });
       }).timeout(30000);
     
-  
+      afterEach(async () => {
+        await Articles.deleteOne({title: "ARTICLE Mocha TEST TEST"})
+      })
                                   
 		});
 
@@ -461,6 +477,7 @@ describe('My brand api testing', () => {
         }).timeout(30000);
        
     });
+ 
     
 
  

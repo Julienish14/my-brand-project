@@ -8,13 +8,13 @@ const getAllPosts = async (req, res) => {
         const posts = await Post.find()
         .populate('comments', 'text commentedBy date')
         .populate('likes', 'full_name');
-        res.status(200).json({
+        return  res.status(200).json({
             message: "All created articles",
             posts
         });
 
     }catch(err){
-        res.status(500).json({
+        return res.status(500).json({
              message: 'No article found',
              err 
         });
@@ -28,12 +28,12 @@ const getOnePost = async (req, res) => {
         const oneArticle = await Post.findById(req.params.postId)
         .populate('comments', 'text commentedBy date')
         .populate('likes', 'full_name');
-        res.status(200).json({
+        return res.status(200).json({
             message: "Article",
             oneArticle
         });
     }catch(err){
-        res.status(404).json({ 
+        return res.status(404).json({ 
             message: 'article Not found',
             err
         });
@@ -49,7 +49,7 @@ const saveApost = async (req, res) => {
     try{
         await post.save();
         // console.log(post);
-        res.status(201).json({
+        return res.status(201).json({
             message: "New article created successfully!",
             data: {
                 post
@@ -57,7 +57,7 @@ const saveApost = async (req, res) => {
         });
     }catch(err){
         console.log(err)
-            res.status(500).json({
+            return res.status(500).json({
                 message: 'Failed to create an article',
                 err
             });
@@ -70,12 +70,12 @@ const deleteOnePost =async (req, res) => {
     try{
         const removedPost = await Post.deleteOne({ _id: req.params.postId });
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "article deleted successfully!", 
             removedPost
         });
     }catch(err){
-        res.status(404).json({ 
+        return res.status(404).json({ 
             message: 'article Not found',
             err
         });
@@ -96,12 +96,12 @@ const updatePost = async (req, res) => {
             },
             
         });
-        res.status(200).json({
+        return res.status(200).json({
             message:"Blog-post updated successfully!",
             updatedPost
         });
     }catch(err){
-        res.status(404).json({ 
+        return res.status(404).json({ 
             message: 'article Not found',
             err
         });
