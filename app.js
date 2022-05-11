@@ -7,7 +7,7 @@ const swaggerUI = require('swagger-ui-express');
 const cookieParser = require('cookie-parser')
 
 
-const PORT = process.env.PORT || 4400;
+const PORT = process.env.PORT || 4500;
 
 app.use(cors());
 app.options('*', cors());
@@ -33,7 +33,8 @@ const options = {
             servers: [
                 {
 
-                url: 'https://my-brand-project.herokuapp.com/'
+                url: 'https://my-brand-project.herokuapp.com/',
+                url: 'http://localhost:4500/'
     
                 }
             ],
