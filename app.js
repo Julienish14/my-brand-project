@@ -21,6 +21,7 @@ const bodyParser = require('body-parser');
 require('dotenv/config');
  
 app.use(bodyParser.json());
+app.use(express.json());
 
 const options = {
     definition: {
@@ -33,8 +34,8 @@ const options = {
             servers: [
                 {
 
-                url: 'https://my-brand-project.herokuapp.com/',
-                url: 'http://localhost:4500/'
+                url: 'https://my-brand-project.herokuapp.com/'
+                // url: 'http://localhost:4500/'
     
                 }
             ],
