@@ -6,8 +6,6 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 const cookieParser = require("cookie-parser");
 
-const PORT = process.env.PORT || 4500;
-
 app.use(cors());
 app.options("*", cors());
 app.enable("trust proxy");
@@ -16,6 +14,7 @@ app.use(cookieParser());
 
 const bodyParser = require("body-parser");
 require("dotenv/config");
+const PORT = process.env.PORT || 4500;
 
 app.use(bodyParser.json());
 app.use(express.json());
