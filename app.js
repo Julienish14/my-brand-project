@@ -56,10 +56,16 @@ app.get("/", (req, res) => {
   res.send("Welcome to my-brand API");
 });
 
-//Connect to DB
-mongoose.connect(process.env.DB_CONNECTION, () =>
-  console.log("Now You are connect to DB!")
-);
+const MONGO_URL = process.env.DB_CONNECTION;
+
+mongoose
+  .connect(MONGO_URL)
+  .then(() => {
+    console.log(`Now You are connect to DB: `, mongoose.connection.name);
+  })
+  .catch((error) => {
+    console.log(`Not connected`, error);
+  });
 
 //Listern to my server
 app.listen(PORT, () => {
