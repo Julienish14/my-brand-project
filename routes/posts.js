@@ -1,38 +1,37 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const checkAuth = require('../middleware/check-auth');
-const protect = require('../middleware/protected');
+const checkAuth = require("../middleware/check-auth");
+const protect = require("../middleware/protected");
 
-const postsController = require('../controllers/postsController');
-const commentContro = require('../controllers/commentsController')
+const postsController = require("../controllers/postsController");
+const commentContro = require("../controllers/commentsController");
+const upload = require("../utils/multer");
 
-const multer = require('multer');
+// const multer = require('multer');
 
-const storage = multer.diskStorage({
-    destination: function(req , file, cb) {
-        cb(null, './uploads')
-    },
-    filename: function(req, file, cb){
-        cb(null, new Date().getTime()+ '-' + file.originalname)
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: function(req , file, cb) {
+//         cb(null, './uploads')
+//     },
+//     filename: function(req, file, cb){
+//         cb(null, new Date().getTime()+ '-' + file.originalname)
+//     }
+// });
 
-const fileFilter = (req, file, cb) => {
-    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
-        cb(null, true);
-    }else{
-        cb(null, false);
-    }
-};
+// const fileFilter = (req, file, cb) => {
+//     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+//         cb(null, true);
+//     }else{
+//         cb(null, false);
+//     }
+// };
 
-
-const upload = multer({storage: storage, limits: {
-    fileSize: 1024 * 1024 * 5    
-  },
-  fileFilter: fileFilter
-});
-
+// const upload = multer({storage: storage, limits: {
+//     fileSize: 1024 * 1024 * 5
+//   },
+//   fileFilter: fileFilter
+// });
 
 /**
  * @swagger
@@ -40,7 +39,7 @@ const upload = multer({storage: storage, limits: {
  *  schemas:
  *      Posts:
  *          type: object
- *          required: 
+ *          required:
  *              - title
  *              - content
  *              - blogImage
@@ -48,10 +47,10 @@ const upload = multer({storage: storage, limits: {
  *          properties:
  *              id:
  *                  type: string
- *                  description: The auto-generated id of the post 
+ *                  description: The auto-generated id of the post
  *              title:
  *                  type: string
- *                  description: blog title 
+ *                  description: blog title
  *              content:
  *                  type: string
  *                  description: the content of the article
@@ -64,12 +63,10 @@ const upload = multer({storage: storage, limits: {
  *                  description: The auto-generated date of the created article
  *          example:
  *              title: this is my first blog article
- *              content: this is the context of my first blog article 
+ *              content: this is the context of my first blog article
  *              blogImage: url image
- *                  
+ *
  */
-
-
 
 /**
  * @swagger
@@ -77,7 +74,7 @@ const upload = multer({storage: storage, limits: {
  *  schemas:
  *      Comments:
  *          type: object
- *          required: 
+ *          required:
  *              - comment
  *          properties:
  *              comment:
@@ -87,17 +84,16 @@ const upload = multer({storage: storage, limits: {
  *              comment: this is my first blog article
  */
 
-
 /**
  * @swagger
  * tags:
  *      name: article
- *      description: about articles 
+ *      description: about articles
  */
 
 /**
  * @swagger
- *    tags: 
+ *    tags:
  *        name: comment & like
  *        description: comments and like on the article
  */
@@ -109,13 +105,13 @@ const upload = multer({storage: storage, limits: {
  *       summary: get the list of all articles
  *       tags: [article]
  *       responses:
- *          200: 
+ *          200:
  *              description: get all the list of created article
- *              content: 
+ *              content:
  *                  application/json:
- *                      schema: 
+ *                      schema:
  *                          type: array
- *                          items: 
+ *                          items:
  *                            $ref: '#/components/schemas/Posts'
  *          500:
  *              description: internal sever error
@@ -135,25 +131,24 @@ const upload = multer({storage: storage, limits: {
  *            required: true
  *            description: the article id
  *      responses:
- *          200: 
+ *          200:
  *            description: the specific article by id
  *            content:
- *              application/json: 
- *                  schema: 
+ *              application/json:
+ *                  schema:
  *                      $ref: '#/components/schemas/Posts'
- *          404: 
+ *          404:
  *             description: Not found
  *          500:
  *             description: internal sever error
- *        
+ *
  */
-
 
 /**
  * @swagger
  * /api/v1/articles:
- *     post: 
- *        summary: add new article 
+ *     post:
+ *        summary: add new article
  *        tags: [article]
  *        requestBody:
  *              required: true
@@ -162,28 +157,27 @@ const upload = multer({storage: storage, limits: {
  *                      schema:
  *                          type: object
  *                          properties:
- *                              title: 
+ *                              title:
  *                                 type: string
- *                              content: 
+ *                              content:
  *                                 type: string
  *                              blogImage:
  *                                 type: string
  *                                 format: binary
  *        responses:
- *                 201: 
+ *                 201:
  *                    description: blog added successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Posts'
  *                 500:
  *                    description: failed to add blog
  *                 401:
- *                    description: unauthorized 
- * 
- *                  
+ *                    description: unauthorized
+ *
+ *
  */
-
 
 /**
  * @swagger
@@ -194,7 +188,7 @@ const upload = multer({storage: storage, limits: {
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: article to update
@@ -205,21 +199,21 @@ const upload = multer({storage: storage, limits: {
  *                      schema:
  *                          type: object
  *                          properties:
- *                              title: 
+ *                              title:
  *                                 type: string
- *                              content: 
+ *                              content:
  *                                 type: string
  *                              blogImage:
  *                                 type: string
  *                                 format: binary
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: article updated successful
- *              404: 
+ *              404:
  *                description: article not found
  *              401:
- *                description: unauthorized 
- *              500: 
+ *                description: unauthorized
+ *              500:
  *                description: Internal sever error
  *
  */
@@ -233,14 +227,14 @@ const upload = multer({storage: storage, limits: {
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: article id to delete
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: the article deleted successfully!
- *              404: 
+ *              404:
  *                description: the article not found
  *
  */
@@ -248,13 +242,13 @@ const upload = multer({storage: storage, limits: {
 /**
  * @swagger
  * /api/v1/articles/{id}/comment:
- *     put: 
- *        summary: add a comment on article 
+ *     put:
+ *        summary: add a comment on article
  *        tags: [comment & like]
  *        parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: article to update
@@ -265,53 +259,51 @@ const upload = multer({storage: storage, limits: {
  *                      schema:
  *                          $ref: '#/components/schemas/Comments'
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: comment added successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Comments'
  *                 500:
  *                    description: failed to add comment
  *                 401:
- *                    description: unauthorized 
+ *                    description: unauthorized
  *                 404:
  *                    description: Not found
- * 
- *                  
+ *
+ *
  */
-
 
 /**
  * @swagger
  * /api/v1/articles/{id}/like:
- *     put: 
+ *     put:
  *        summary: like an article
  *        tags: [comment & like]
  *        parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: article to update
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: comment added successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Posts'
  *                 500:
  *                    description: failed to add a like
  *                 401:
- *                    description: unauthorized 
- *                 404: 
+ *                    description: unauthorized
+ *                 404:
  *                    description: Not found
- * 
- *                  
+ *
+ *
  */
-
 
 /**
  * @swagger
@@ -320,15 +312,15 @@ const upload = multer({storage: storage, limits: {
  *       summary: get the list of all comments as Admin
  *       tags: [comment & like]
  *       responses:
- *          200: 
+ *          200:
  *              description: get all the list of comments
- *              content: 
+ *              content:
  *                  application/json:
- *                      schema: 
+ *                      schema:
  *                          type: array
- *                          items: 
+ *                          items:
  *                            $ref: '#/components/schemas/Comments'
- *          500: 
+ *          500:
  *              description: No comments found
  */
 
@@ -341,49 +333,55 @@ const upload = multer({storage: storage, limits: {
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: a comment id to delete
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: comment deleted successfully!
- *              404: 
+ *              404:
  *                description: no comment found
- *              500: 
+ *              500:
  *                description: server err
  *
  */
 
-
-
-router.route('/')
-//Get all the Article
-    .get(postsController.getAllPosts)
-//Submit a posts
-    .post([checkAuth, protect], upload.single('blogImage'), postsController.saveApost);
+router
+  .route("/")
+  //Get all the Article
+  .get(postsController.getAllPosts)
+  //Submit a posts
+  .post(
+    [checkAuth, protect],
+    upload.single("blogImage"),
+    postsController.saveApost
+  );
 // like a Article
-router.route('/:postId/like')
-    .put(checkAuth, postsController.like)
+router.route("/:postId/like").put(checkAuth, postsController.like);
 
-router.route('/:postId')
-//specific Article
-        .get(postsController.getOnePost)
-//Delete Article
-        .delete([checkAuth, protect], postsController.deleteOnePost)
-//Update Article
-        .patch([checkAuth, protect], upload.single('blogImage'), postsController.updatePost);
-
+router
+  .route("/:postId")
+  //specific Article
+  .get(postsController.getOnePost)
+  //Delete Article
+  .delete([checkAuth, protect], postsController.deleteOnePost)
+  //Update Article
+  .patch(
+    [checkAuth, protect],
+    upload.single("blogImage"),
+    postsController.updatePost
+  );
 
 //comment on Article
-router.route('/:postId/comment')
-    .put(checkAuth, commentContro.commentOnArticle)
+router.route("/:postId/comment").put(checkAuth, commentContro.commentOnArticle);
 //get specific and delete comments
-router.route('/comments/all/:commentId')
-    .delete([checkAuth, protect], commentContro.deleteComment)
-    .get([checkAuth, protect], commentContro.getOneComment)
-router.route('/comments/all')
-    .get([checkAuth, protect], commentContro.getAllComments);
-
+router
+  .route("/comments/all/:commentId")
+  .delete([checkAuth, protect], commentContro.deleteComment)
+  .get([checkAuth, protect], commentContro.getOneComment);
+router
+  .route("/comments/all")
+  .get([checkAuth, protect], commentContro.getAllComments);
 
 module.exports = router;

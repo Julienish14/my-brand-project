@@ -57,7 +57,7 @@ app.get("/", (req, res) => {
 });
 
 const MONGO_URL = process.env.DB_CONNECTION;
-
+mongoose.set("strictQuery", false);
 mongoose
   .connect(MONGO_URL)
   .then(() => {
