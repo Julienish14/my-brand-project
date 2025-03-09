@@ -10,14 +10,16 @@ const commentContro = require("../controllers/commentsController");
 
 const multer = require("multer");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, new Date().getTime() + "-" + file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "./uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, new Date().getTime() + "-" + file.originalname);
+//   },
+// });
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
