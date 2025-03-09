@@ -7,25 +7,27 @@ const protect = require("../middleware/protected");
 const postsController = require("../controllers/postsController");
 const commentContro = require("../controllers/commentsController");
 
-const multer = require("multer");
+const upload = require("../utils/multer");
 
-const storage = multer.memoryStorage();
+// const multer = require("multer");
 
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
+// const storage = multer.memoryStorage();
 
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5,
-  },
-  fileFilter: fileFilter,
-});
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+//     cb(null, true);
+//   } else {
+//     cb(null, false);
+//   }
+// };
+
+// const upload = multer({
+//   storage: storage,
+//   limits: {
+//     fileSize: 1024 * 1024 * 5,
+//   },
+//   fileFilter: fileFilter,
+// });
 
 /**
  * @swagger

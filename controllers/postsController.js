@@ -86,6 +86,10 @@ const updatePost = async (req, res) => {
       },
       { new: true }
     );
+    if (!updatePost) {
+      console.log("Yooooo! this is not");
+    }
+
     return res.status(200).json({
       message: "Blog-post updated successfully!",
       updatedPost,
