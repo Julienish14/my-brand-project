@@ -2,30 +2,6 @@ const { path } = require("express/lib/application");
 const Post = require("../models/Post");
 const { uploadImage } = require("../utils/cloudinary");
 
-// const saveApost = async (req, res) => {
-//   const post = new Post({
-//     title: req.body.title,
-//     content: req.body.content,
-//     // blogImage: req.file ? req.file.path : "",
-//   });
-//   try {
-//     await post.save();
-//     console.log(post);
-//     return res.status(201).json({
-//       message: "New article created successfully!",
-//       data: {
-//         post,
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       message: "Failed to create an article",
-//       err,
-//     });
-//   }
-// };
-
 const saveApost = async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -104,7 +80,8 @@ const updatePost = async (req, res) => {
         $set: {
           title: req.body.title,
           content: req.body.content,
-          blogImage: req.file ? req.file.path : "",
+          // blogImage: req.file ? req.file.path : "",
+          blogImage: req.file ? await uploadImage(req.file) : null,
         },
       }
     );
