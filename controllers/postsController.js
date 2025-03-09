@@ -2,29 +2,46 @@ const { path } = require("express/lib/application");
 const Post = require("../models/Post");
 const { uploadImage } = require("../utils/cloudinary");
 
+// const saveApost = async (req, res) => {
+//   const post = new Post({
+//     title: req.body.title,
+//     content: req.body.content,
+//     // blogImage: req.file ? req.file.path : "",
+//   });
+//   try {
+//     await post.save();
+//     console.log(post);
+//     return res.status(201).json({
+//       message: "New article created successfully!",
+//       data: {
+//         post,
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({
+//       message: "Failed to create an article",
+//       err,
+//     });
+//   }
+// };
+
 const saveApost = async (req, res) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-    blogImage: req.file ? req.file.path : "",
-  });
   try {
-    await post.save();
-    console.log(post);
-    return res.status(201).json({
-      message: "New article created successfully!",
-      data: {
-        post,
-      },
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      message: "Failed to create an article",
-      err,
-    });
+    const { title, content } = req.body;
+    const blogImage = req.file ? await uploadImage(req.file) : null;
+
+    const newBlog = await Post.create({ title, content, blogImage });
+
+    res
+      .status(201)
+      .json({ message: "Blog created successfully!", data: newBlog });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Failed to create a post" });
   }
 };
+
 const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
