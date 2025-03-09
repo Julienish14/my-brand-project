@@ -19,12 +19,16 @@ module.exports = async (req, res, next) => {
 
     const freshUser = await User.findById(decoded.userId);
     req.user = freshUser;
+    console.log(freshUser);
+
+    // if (!freshUser) {
+    //   return res.status(401).json({
+    //     status: "fail",
+    //     message: "login first!",
+    //   });
+    // }
     next();
   } catch (error) {
     console.log(error);
-    return res.status(401).json({
-      status: "fail",
-      message: "login first!",
-    });
   }
 };
