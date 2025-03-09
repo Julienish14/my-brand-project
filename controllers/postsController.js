@@ -1,6 +1,7 @@
 const { path } = require("express/lib/application");
 const Post = require("../models/Post");
 const { uploadImage } = require("../utils/cloudinary");
+const { default: mongoose } = require("mongoose");
 
 const saveApost = async (req, res) => {
   try {
@@ -74,27 +75,24 @@ const deleteOnePost = async (req, res) => {
 
 const updatePost = async (req, res) => {
   try {
-    const updatedPost = await Post.updateOne(
+    const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.params.postId },
       {
         $set: {
           title: req.body.title,
           content: req.body.content,
-          // blogImage: req.file ? req.file.path : "",
           blogImage: req.file ? await uploadImage(req.file) : null,
         },
-      }
+      },
+      { new: true }
     );
     return res.status(200).json({
       message: "Blog-post updated successfully!",
       updatedPost,
     });
   } catch (err) {
-    return res.status(404).json({
-      message: "article Not found",
-      err,
-    });
-    res.status(500).json({
+    console.log(err);
+    return res.status(500).json({
       message: "Update fails",
       err,
     });

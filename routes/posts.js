@@ -6,7 +6,6 @@ const protect = require("../middleware/protected");
 
 const postsController = require("../controllers/postsController");
 const commentContro = require("../controllers/commentsController");
-// const upload = require("../utils/multer");
 
 const multer = require("multer");
 
