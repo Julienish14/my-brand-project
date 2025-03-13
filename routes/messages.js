@@ -143,9 +143,11 @@ const messageValidation = require("../validators/messageValid");
  *
  */
 
+//ADDITION...
+
 /**
  * @swagger
- * /api/v1/messages/{id}:
+ * /api/v1/messagesF/{id}:
  *      delete:
  *          summary: Remove message from the db
  *          tags: [Message]
