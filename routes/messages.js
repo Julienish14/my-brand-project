@@ -143,6 +143,29 @@ const messageValidation = require("../validators/messageValid");
  *
  */
 
+/**
+ * @swagger
+ * /api/v1/messages/{id}:
+ *      delete:
+ *          summary: Remove message from the db
+ *          tags: [Message]
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                schema:
+ *                    type: string
+ *                required: true
+ *                description: message id to delete
+ *          responses:
+ *              200:
+ *                description: the message deleted successful
+ *              404:
+ *                description: the message not found
+ *              403:
+ *                description: Access denied Forbidden
+ *
+ */
+
 router
   .route("/")
   .post(validate(messageValidation.messageVal), messageControlles.messagePost)
