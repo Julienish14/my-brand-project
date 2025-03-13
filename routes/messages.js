@@ -1,13 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {validate} = require('express-validation');
-const { valid } = require('joi');
+const { validate } = require("express-validation");
+const { valid } = require("joi");
 
-const checkAuth = require('../middleware/check-auth');
-const protect = require('../middleware/protected')
+const checkAuth = require("../middleware/check-auth");
+const protect = require("../middleware/protected");
 
-const messageControlles = require('../controllers/messageController');
-const messageValidation = require('../validators/messageValid')
+const messageControlles = require("../controllers/messageController");
+const messageValidation = require("../validators/messageValid");
 
 /**
  * @swagger
@@ -15,7 +15,7 @@ const messageValidation = require('../validators/messageValid')
  *  schemas:
  *      Messages:
  *          type: object
- *          required: 
+ *          required:
  *              - name
  *              - email
  *              - message
@@ -39,7 +39,7 @@ const messageValidation = require('../validators/messageValid')
  *              name: jules kalisa
  *              email: juleska@gmail.com
  *              message: this is good thing
- *                  
+ *
  */
 
 /**
@@ -56,13 +56,32 @@ const messageValidation = require('../validators/messageValid')
  *       summary: get the messages
  *       tags: [Message]
  *       responses:
- *          200: 
+ *          200:
  *              description: get all the messages from contact users
- *              content: 
+ *              content:
  *                  application/json:
- *                      schema: 
+ *                      schema:
  *                          type: array
- *                          items: 
+ *                          items:
+ *                            $ref: '#/components/schemas/Messages'
+ *          403:
+ *              description: Access denied Forbidden
+ */
+
+/**
+ * @swagger
+ * /api/v1/messages:
+ *    get:
+ *       summary: get the messages
+ *       tags: [Message]
+ *       responses:
+ *          200:
+ *              description: get all the messages from contact users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
  *                            $ref: '#/components/schemas/Messages'
  *          403:
  *              description: Access denied Forbidden
@@ -82,23 +101,23 @@ const messageValidation = require('../validators/messageValid')
  *            required: true
  *            description: The message id
  *      responses:
- *          200: 
+ *          200:
  *            description: the specific message by id
  *            content:
- *              application/json: 
- *                  schema: 
+ *              application/json:
+ *                  schema:
  *                      $ref: '#/components/schemas/Messages'
  *          403:
  *            description: Access denied Forbidden
  *          404:
  *            description: Not found
- *        
+ *
  */
 
 /**
  * @swagger
  * /api/v1/messages:
- *     post: 
+ *     post:
  *        summary: create a message from users
  *        tags: [Message]
  *        requestBody:
@@ -108,16 +127,16 @@ const messageValidation = require('../validators/messageValid')
  *                      schema:
  *                          $ref: '#/components/schemas/Messages'
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: message sent successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Messages'
  *                 500:
- *                    description: failed 
- * 
- *                  
+ *                    description: failed
+ *
+ *
  */
 
 /**
@@ -129,29 +148,28 @@ const messageValidation = require('../validators/messageValid')
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: message id to delete
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: the message deleted successful
- *              404: 
+ *              404:
  *                description: the message not found
  *              403:
  *                description: Access denied Forbidden
  *
  */
 
+router
+  .route("/")
+  .post(validate(messageValidation.messageVal), messageControlles.messagePost)
+  .get([checkAuth, protect], messageControlles.messageGet);
 
-router.route('/')
-    .post(validate(messageValidation.messageVal), messageControlles.messagePost)
-    .get([checkAuth,protect], messageControlles.messageGet)
-
-router.route('/:messageId')
-    .get([checkAuth,protect], messageControlles.getOneMessage)
-    .delete([checkAuth,protect], messageControlles.messageDelete)
-
-
+router
+  .route("/:messageId")
+  .get([checkAuth, protect], messageControlles.getOneMessage)
+  .delete([checkAuth, protect], messageControlles.messageDelete);
 
 module.exports = router;
