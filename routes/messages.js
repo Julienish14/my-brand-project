@@ -89,6 +89,25 @@ const messageValidation = require("../validators/messageValid");
 
 /**
  * @swagger
+ * /api/v1/messages:
+ *    get:
+ *       summary: get the messages
+ *       tags: [Message]
+ *       responses:
+ *          200:
+ *              description: get all the messages from contact users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                            $ref: '#/components/schemas/Messages'
+ *          403:
+ *              description: Access denied Forbidden
+ */
+
+/**
+ * @swagger
  * /api/v1/messages/{id}:
  *    get:
  *      summary: get specific message by id
