@@ -109,3 +109,34 @@ const updateProject = async (req, res) => {
       .json({ message: "Failed to update project", error: error.message });
   }
 };
+
+const deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    if (project.projectImages && project.projectImages.length > 0) {
+      for (const imgUrl of project.projectImages) {
+        await deleteImage(imgUrl);
+      }
+    }
+
+    await Project.findByIdAndDelete(req.params.projectId);
+
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete project", error: error.message });
+  }
+};
+
+module.exports = {
+  createProject,
+  getAllProjects,
+  getOneProject,
+  updateProject,
+  deleteProject,
+};
