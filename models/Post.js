@@ -12,7 +12,8 @@ const PostSchema = mongoose.Schema({
     required: true,
   },
   blogImage: {
-    type: [{ String }],
+    type: [String],
+    default: [],
   },
   likes: [
     {
