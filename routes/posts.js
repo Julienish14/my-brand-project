@@ -331,7 +331,7 @@ router
   .post(
     [checkAuth, protect],
     upload.single("blogImage"),
-    postsController.saveApost
+    postsController.saveApost,
   );
 // like a Article
 router.route("/:postId/like").put(checkAuth, postsController.like);
@@ -346,18 +346,21 @@ router
   .patch(
     [checkAuth, protect],
     upload.single("blogImage"),
-    postsController.updatePost
+    postsController.updatePost,
   );
 
-//comment on Article
-router.route("/:postId/comment").put(checkAuth, commentContro.commentOnArticle);
+router
+  .route("/comments/all")
+  .get([checkAuth, protect], commentContro.getAllComments);
+
 //get specific and delete comments
+
 router
   .route("/comments/all/:commentId")
   .delete([checkAuth, protect], commentContro.deleteComment)
   .get([checkAuth, protect], commentContro.getOneComment);
-router
-  .route("/comments/all")
-  .get([checkAuth, protect], commentContro.getAllComments);
+
+//comment on Article
+router.route("/:postId/comment").put(checkAuth, commentContro.commentOnArticle);
 
 module.exports = router;
