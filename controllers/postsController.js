@@ -3,12 +3,39 @@ const Post = require("../models/Post");
 const { uploadImage } = require("../utils/cloudinary");
 const { default: mongoose } = require("mongoose");
 
+// const saveApost = async (req, res) => {
+//   try {
+//     const { title, content } = req.body;
+//     const blogImage = req.file ? await uploadImage(req.file) : null;
+
+//     const newBlog = await Post.create({ title, content, blogImage });
+
+//     res
+//       .status(201)
+//       .json({ message: "Blog created successfully!", data: newBlog });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Failed to create a post" });
+//   }
+// };
+
 const saveApost = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const blogImage = req.file ? await uploadImage(req.file) : null;
 
-    const newBlog = await Post.create({ title, content, blogImage });
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageUrl = await uploadImage(file);
+        imageUrls.push(imageUrl);
+      }
+    }
+
+    const newBlog = await Post.create({
+      title,
+      content,
+      blogImage: imageUrls,
+    });
 
     res
       .status(201)
@@ -66,28 +93,71 @@ const deleteOnePost = async (req, res) => {
       message: "article Not found",
       err,
     });
-    res.status(500).json({
-      message: "Not deleted",
-      err,
-    });
   }
 };
 
+// const updatePost = async (req, res) => {
+//   try {
+//     const updatedPost = await Post.findByIdAndUpdate(
+//       { _id: req.params.postId },
+//       {
+//         $set: {
+//           title: req.body.title,
+//           content: req.body.content,
+//           blogImage: req.file ? await uploadImage(req.file) : null,
+//         },
+//       },
+//       { new: true },
+//     );
+//     if (!updatePost) {
+//       console.log("Yooooo! this is not");
+//     }
+
+//     return res.status(200).json({
+//       message: "Blog-post updated successfully!",
+//       updatedPost,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({
+//       message: "Update fails",
+//       err,
+//     });
+//   }
+// };
+
 const updatePost = async (req, res) => {
   try {
+    // 1. Prepare the data to update
+    let updateData = {
+      title: req.body.title,
+      content: req.body.content,
+    };
+
+    // 2. Check if new files were uploaded
+    if (req.files && req.files.length > 0) {
+      let imageUrls = [];
+      for (const file of req.files) {
+        // uploadImage returns the URL string directly
+        const imageUrl = await uploadImage(file);
+        imageUrls.push(imageUrl);
+      }
+      // Only update the blogImage field if new files were uploaded
+      updateData.blogImage = imageUrls;
+    }
+
+    // 3. Update the database
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.params.postId },
-      {
-        $set: {
-          title: req.body.title,
-          content: req.body.content,
-          blogImage: req.file ? await uploadImage(req.file) : null,
-        },
-      },
-      { new: true }
+      { $set: updateData },
+      { new: true }, // Returns the updated document
     );
-    if (!updatePost) {
-      console.log("Yooooo! this is not");
+
+    // 4. Handle "Not Found" (Check the correct variable name!)
+    if (!updatedPost) {
+      return res.status(404).json({
+        message: "Article not found",
+      });
     }
 
     return res.status(200).json({
@@ -98,7 +168,7 @@ const updatePost = async (req, res) => {
     console.log(err);
     return res.status(500).json({
       message: "Update fails",
-      err,
+      err: err.message,
     });
   }
 };

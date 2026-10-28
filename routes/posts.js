@@ -330,7 +330,7 @@ router
   //Submit a posts
   .post(
     [checkAuth, protect],
-    upload.single("blogImage"),
+    upload.array("blogImage"),
     postsController.saveApost,
   );
 // like a Article

@@ -14,7 +14,6 @@ chai.use(chaiHttp);
 const serChai = chai.request(server).keepOpen();
 
 describe("My brand api testing", () => {
-  // 1. SETUP
   before(async function () {
     this.timeout(30000);
 
@@ -42,7 +41,11 @@ describe("My brand api testing", () => {
   after(async () => {
     try {
       await Users.deleteMany({ email: { $ne: "julish@gmail.com" } });
-      await Articles.deleteMany({});
+      await Articles.deleteMany({
+        title: {
+          $ne: "AI: The Quiet Force Reshaping Every Sector - and How Rwanda Is Leading the Charge.",
+        },
+      });
       await Messages.deleteMany({});
       console.log("Database cleaned. Admin preserved.");
       serChai.close();
