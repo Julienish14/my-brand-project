@@ -36,3 +36,76 @@ const createProject = async (req, res) => {
       .json({ message: "Failed to create project", error: error.message });
   }
 };
+
+const getOneProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json({
+      message: "Project retrieved successfully",
+      data: project,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to get project", error: error.message });
+  }
+};
+
+const updateProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    let updateData = { ...req.body };
+
+    if (updateData.techStack) {
+      updateData.techStack = updateData.techStack.split(",");
+    }
+
+    let finalImages = project.projectImages;
+
+    if (req.body.imagesToKeep !== undefined) {
+      let imagesToKeep = req.body.imagesToKeep;
+      if (typeof imagesToKeep === "string") {
+        imagesToKeep = JSON.parse(imagesToKeep);
+      }
+
+      const imagesToDelete = finalImages.filter(
+        (img) => !imagesToKeep.includes(img),
+      );
+      for (const imgUrl of imagesToDelete) {
+        await deleteImage(imgUrl);
+      }
+      finalImages = imagesToKeep;
+    }
+
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const newImageUrl = await uploadImage(file);
+        finalImages.push(newImageUrl);
+      }
+    }
+
+    updateData.projectImages = finalImages;
+
+    const updatedProject = await Project.findByIdAndUpdate(
+      req.params.projectId,
+      { $set: updateData },
+      { new: true, runValidators: true },
+    );
+
+    res.status(200).json({
+      message: "Project updated successfully",
+      data: updatedProject,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to update project", error: error.message });
+  }
+};
