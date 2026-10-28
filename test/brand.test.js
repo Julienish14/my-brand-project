@@ -37,7 +37,6 @@ describe("My brand api testing", () => {
     console.log("Admin user is ready for testing.");
   });
 
-  // 2. CLEANUP
   after(async () => {
     try {
       await Users.deleteMany({ email: { $ne: "julish@gmail.com" } });
@@ -54,7 +53,6 @@ describe("My brand api testing", () => {
     }
   });
 
-  // 3. TESTS
   describe("Welcome to api", () => {
     it("should return welcome text from server", (done) => {
       chai
@@ -265,13 +263,11 @@ describe("My brand api testing", () => {
       await Users.deleteOne({ email: "normaluser@gmail.com" });
     });
 
-    // 3. The Test: Try to access an Admin-only route
     it("should return 403 Forbidden when a normal user tries to access admin routes", async () => {
       const res = await serChai
         .get("/api/v1/users")
         .set({ Cookie: `jwt=${normalUserToken}` });
 
-      // Expect a 403 Forbidden (which triggers the catch block in protected.js)
       expect(res.status).to.equal(403);
       expect(res.body).to.have.property("status", "fail");
       expect(res.body).to.have.property("message", "Access Denied!");
@@ -332,11 +328,9 @@ describe("My brand api testing", () => {
       expect(res.status).to.equal(200);
     });
 
-    // TEST 3: ADD COMMENT
     it("should add a comment to the article", async () => {
       const add_comment = { text: "This is cool topic ever!" };
 
-      // FIX: Changed back to .put() because your route uses .put()
       const res = await serChai
         .put(`/api/v1/articles/${postId}/comment`)
         .set({ Cookie: `jwt=${token}` })
@@ -346,7 +340,6 @@ describe("My brand api testing", () => {
       commentId = res.body.data.saveComment._id;
     });
 
-    // TEST 4: GET COMMENT
     it("should GET the specific comment", async () => {
       const res = await serChai
         .get(`/api/v1/articles/comments/all/${commentId}`)
@@ -356,7 +349,6 @@ describe("My brand api testing", () => {
       expect(res.body).to.have.property("message", "Comment");
     });
 
-    // TEST 5: DELETE COMMENT
     it("should DELETE the comment", async () => {
       const res = await serChai
         .delete(`/api/v1/articles/comments/all/${commentId}`)
