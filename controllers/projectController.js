@@ -37,6 +37,21 @@ const createProject = async (req, res) => {
   }
 };
 
+const getAllProjects = async (req, res) => {
+  try {
+    const projects = await Project.find().sort({ createdAt: -1 });
+    res.status(200).json({
+      message: "All projects retrieved successfully",
+      results: projects.length,
+      data: projects,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to get projects", error: error.message });
+  }
+};
+
 const getOneProject = async (req, res) => {
   try {
     const project = await Project.findById(req.params.projectId);
