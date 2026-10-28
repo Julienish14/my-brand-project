@@ -6,9 +6,20 @@ const { default: mongoose } = require("mongoose");
 const saveApost = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const blogImage = req.file ? await uploadImage(req.file) : null;
 
-    const newBlog = await Post.create({ title, content, blogImage });
+    let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageUrl = await uploadImage(file);
+        imageUrls.push(imageUrl);
+      }
+    }
+
+    const newBlog = await Post.create({
+      title,
+      content,
+      blogImage: imageUrls,
+    });
 
     res
       .status(201)
@@ -66,28 +77,35 @@ const deleteOnePost = async (req, res) => {
       message: "article Not found",
       err,
     });
-    res.status(500).json({
-      message: "Not deleted",
-      err,
-    });
   }
 };
 
 const updatePost = async (req, res) => {
   try {
+    let updateData = {
+      title: req.body.title,
+      content: req.body.content,
+    };
+
+    if (req.files && req.files.length > 0) {
+      let imageUrls = [];
+      for (const file of req.files) {
+        const imageUrl = await uploadImage(file);
+        imageUrls.push(imageUrl);
+      }
+      updateData.blogImage = imageUrls;
+    }
+
     const updatedPost = await Post.findByIdAndUpdate(
       { _id: req.params.postId },
-      {
-        $set: {
-          title: req.body.title,
-          content: req.body.content,
-          blogImage: req.file ? await uploadImage(req.file) : null,
-        },
-      },
-      { new: true }
+      { $set: updateData },
+      { new: true },
     );
-    if (!updatePost) {
-      console.log("Yooooo! this is not");
+
+    if (!updatedPost) {
+      return res.status(404).json({
+        message: "Article not found",
+      });
     }
 
     return res.status(200).json({
@@ -98,7 +116,7 @@ const updatePost = async (req, res) => {
     console.log(err);
     return res.status(500).json({
       message: "Update fails",
-      err,
+      err: err.message,
     });
   }
 };

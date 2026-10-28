@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon --localstorage-file=./localStorage.db app.js",
     "test": "mocha --exit",
     "cover": "c8 --r html -r text --all  -x 'public/**' -x 'coverage/**' --check-coverage npm test"
   },
@@ -23,7 +23,8 @@
     "express": "^4.17.3",
     "express-validation": "^4.0.0",
     "joi": "^17.6.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "jws": "^4.0.1",
     "mocha": "^11.1.0",
     "mongoose": "^6.2.10",
     "multer": "^1.4.4",
