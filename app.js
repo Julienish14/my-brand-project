@@ -51,6 +51,9 @@ app.use("/api/v1/users", usersRoute);
 const messageRoute = require("./routes/messages");
 app.use("/api/v1/messages", messageRoute);
 
+const projectRoutes = require("./routes/projects");
+app.use("/api/v1/projects", projectRoutes);
+
 //Routers
 app.get("/", (req, res) => {
   res.send("Welcome to my-brand API");
