@@ -14,6 +14,19 @@ chai.use(chaiHttp);
 
 const serChai = chai.request(server).keepOpen();
 
+describe("Welcome to api", () => {
+  it("should return welcome text from server", (done) => {
+    chai
+      .request(server)
+      .get("/")
+      .end((err, res) => {
+        should.not.exist(err);
+        res.should.have.status(200);
+        done();
+      });
+  }).timeout(30000);
+});
+
 describe("My brand api testing", () => {
   before(async function () {
     this.timeout(30000);
@@ -52,19 +65,6 @@ describe("My brand api testing", () => {
     } catch (error) {
       console.error("Error cleaning up database:", error);
     }
-  });
-
-  describe("Welcome to api", () => {
-    it("should return welcome text from server", (done) => {
-      chai
-        .request(server)
-        .get("/")
-        .end((err, res) => {
-          should.not.exist(err);
-          res.should.have.status(200);
-          done();
-        });
-    }).timeout(30000);
   });
 
   describe("should test users signup", () => {
@@ -481,6 +481,27 @@ describe("My brand api testing", () => {
 
     afterEach(async () => {
       await Projects.deleteMany({ title: /Test Project/i });
+    });
+
+    it("should create a new project without images (Admin only)", async () => {
+      const newProject = {
+        title: "Test Project One",
+        description: "A test project description",
+        techStack: "React, Node.Js, MongoDB",
+        githubLink: "https://github.com/test",
+        liveLink: "https://test.com",
+      };
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${token}` })
+        .send(newProject);
+
+      expect(res.status).to.equal(201);
+      expect(res.body.data.title).to.equal(newProject.title);
+      expect(res.body.data.techStack).to.be.an("array").that.include("React");
+      expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
+
+      projectId = res.body.data._id;
     });
   });
 });
