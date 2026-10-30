@@ -14,20 +14,7 @@ chai.use(chaiHttp);
 
 const serChai = chai.request(server).keepOpen();
 
-describe("Welcome to api", () => {
-  it("should return welcome text from server", (done) => {
-    chai
-      .request(server)
-      .get("/")
-      .end((err, res) => {
-        should.not.exist(err);
-        res.should.have.status(200);
-        done();
-      });
-  }).timeout(30000);
-});
-
-describe("My brand api testing", () => {
+describe("My brand API Testing", () => {
   before(async function () {
     this.timeout(30000);
 
@@ -41,6 +28,19 @@ describe("My brand api testing", () => {
       password: hashedPassword,
       isAdmin: true,
     };
+
+    describe("Welcome to the API", () => {
+      it("should return welcome text from server", (done) => {
+        chai
+          .request(server)
+          .get("/")
+          .end((err, res) => {
+            should.not.exist(err);
+            res.should.have.status(200);
+            done();
+          });
+      }).timeout(30000);
+    });
 
     await Users.findOneAndUpdate({ email: adminData.email }, adminData, {
       upsert: true,
