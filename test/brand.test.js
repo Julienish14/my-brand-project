@@ -550,5 +550,17 @@ describe("My brand API Testing", () => {
       expect(res.body.data.title).to.equal(updateData.title);
       expect(res.body.projectImages).to.be.an("array").that.has.lengthOf(1);
     });
+
+    it("should delete a project and its images", async () => {
+      const res = await serChai
+        .delete(`/api/v1/projects/${projectId}`)
+        .set({ Cookie: `jwt=${token}` });
+
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal("Project deleted successufully");
+
+      const checkDb = await Projects.findById(projectId);
+      expect(checkDb).to.be.null;
+    });
   });
 });
