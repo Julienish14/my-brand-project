@@ -15,12 +15,26 @@ chai.use(chaiHttp);
 const serChai = chai.request(server).keepOpen();
 
 describe("My brand API Testing", () => {
+  describe("Welcome to the API", () => {
+    it("should return welcome text from server", (done) => {
+      chai
+        .request(server)
+        .get("/")
+        .end((err, res) => {
+          should.not.exist(err);
+          res.should.have.status(200);
+          done();
+        });
+    }).timeout(30000);
+  });
+
   before(async function () {
-    this.timeout(30000);
+    // this.timeout(30000);
 
     if (mongoose.connection.readyState === 0) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
+
     const hashedPassword = await bcrypt.hash("julish123", 10);
     const adminData = {
       full_name: "Admin User",
@@ -28,27 +42,11 @@ describe("My brand API Testing", () => {
       password: hashedPassword,
       isAdmin: true,
     };
-
-    describe("Welcome to the API", () => {
-      it("should return welcome text from server", (done) => {
-        chai
-          .request(server)
-          .get("/")
-          .end((err, res) => {
-            should.not.exist(err);
-            res.should.have.status(200);
-            done();
-          });
-      }).timeout(30000);
-    });
-
     await Users.findOneAndUpdate({ email: adminData.email }, adminData, {
       upsert: true,
       new: true,
       setDefaultsOnInsert: true,
     });
-
-    console.log("Admin user is ready for testing.");
   });
 
   after(async () => {
@@ -67,12 +65,12 @@ describe("My brand API Testing", () => {
     }
   });
 
-  describe("should test users signup", () => {
+  describe("Should test users registration", () => {
     afterEach(async () => {
       await Users.deleteOne({ email: "julish1@gmail.com" });
     });
 
-    it("should sign new user", (done) => {
+    it("should register a new user", (done) => {
       const user = {
         full_name: "Julien ishimwe",
         email: "julish1@gmail.com",
@@ -87,7 +85,7 @@ describe("My brand API Testing", () => {
         });
     }).timeout(25000);
 
-    it("should throw a message Email already exist", (done) => {
+    it("should throw a message, if the email already exist", (done) => {
       const user = {
         full_name: "Julio ish",
         email: "julish123@gmail.com",
@@ -103,7 +101,7 @@ describe("My brand API Testing", () => {
         });
     }).timeout(30000);
 
-    it("Should throw error when there's validation error", (done) => {
+    it("should throw error when there's validation error", (done) => {
       const user = {
         full_name: "Julius ish",
         email: "julishmail.com",
@@ -502,6 +500,30 @@ describe("My brand API Testing", () => {
       expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
 
       projectId = res.body.data._id;
+    });
+
+    it("should create a new project with images (Admin only)", async () => {
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${token}` })
+        .field("title", "Test Project With Images")
+        .field("techStack", "HTML, CSS, JS")
+        .attach("projectImages", "")
+        .attach("projectImages", "");
+
+      expect(res.status).to.equal(201);
+      expect(res.body.data.projectImages)
+        .to.be.an("array")
+        .that.has.lengthOf(2);
+      expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
+    });
+
+    it("should get all projects (Public route)", async () => {
+      const res = await serChai.get("/api/v1/projects");
+
+      expect(res.status).to.equal(200);
+      expect(res.body.results).to.be.a("number");
+      expect(res.body.data).to.be.an("array");
     });
   });
 });
