@@ -6,6 +6,7 @@ const Articles = require("../models/Post");
 const Messages = require("../models/Message.js");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Projects = require("../models/Project.js");
 
 const expect = chai.expect;
 const should = chai.should();
@@ -466,5 +467,20 @@ describe("My brand api testing", () => {
             });
         });
     }).timeout(30000);
+  });
+
+  describe("Test Project Work API", () => {
+    let token;
+    let projectId;
+    before(async () => {
+      const res = await serChai
+        .post("/api/v1/users/login")
+        .send({ email: "julish123@gmail.com", password: "julish123" });
+      token = res.body.token;
+    });
+
+    afterEach(async () => {
+      await Projects.deleteMany({ title: /Test Project/i });
+    });
   });
 });
