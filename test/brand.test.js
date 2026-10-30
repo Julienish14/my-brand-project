@@ -467,12 +467,158 @@ describe("My brand API Testing", () => {
     }).timeout(30000);
   });
 
+  // describe("Test Project Work API", () => {
+  //   let token;
+  //   let projectId;
+  //   let normalUserToken;
+
+  //   // 1. SETUP: Get Admin token and Normal User token
+  //   before(async () => {
+  //     // Login as Admin
+  //     const res = await serChai
+  //       .post("/api/v1/users/login")
+  //       .send({ email: "julish123@gmail.com", password: "julish123" });
+  //     token = res.body.token;
+
+  //     // Create a Normal User
+  //     await serChai.post("/api/v1/users/signUp").send({
+  //       full_name: "Normal User",
+  //       email: "normaluser@gmail.com",
+  //       password: "password123",
+  //     });
+
+  //     // Login as Normal User
+  //     const normalLogin = await serChai.post("/api/v1/users/login").send({
+  //       email: "normaluser@gmail.com",
+  //       password: "password123",
+  //     });
+  //     normalUserToken = normalLogin.body.token;
+  //   });
+
+  //   // CLEANUP
+  //   afterEach(async () => {
+  //     await Projects.deleteMany({ title: /Test Project/i });
+  //   });
+
+  //   after(async () => {
+  //     await Users.deleteOne({ email: "normaluser@gmail.com" });
+  //   });
+
+  //   // TEST 1: CREATE WITHOUT IMAGES
+  //   it("should create a new project without images (Admin only)", async () => {
+  //     const newProject = {
+  //       title: "Test Project One",
+  //       description: "A test project description",
+  //       techStack: "React, Node.Js, MongoDB",
+  //       githubLink: "https://github.com/test",
+  //       liveLink: "https://test.com",
+  //     };
+
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .send(newProject);
+
+  //     expect(res.status).to.equal(201);
+  //     expect(res.body.data.title).to.equal(newProject.title);
+  //     expect(res.body.data.techStack).to.be.an("array").that.includes("React");
+  //     expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
+
+  //     // Save the ID for the next tests
+  //     projectId = res.body.data._id;
+  //   });
+
+  //   // TEST 2: CREATE WITH IMAGES
+  //   it("should create a new project with images (Admin only)", async () => {
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .field("title", "Test Project With Images")
+  //       .field("description", "Description here")
+  //       .field("techStack", "HTML, CSS, JS")
+
+  //       .attach("projectImages", "./test/test-image.png");
+
+  //     expect(res.status).to.equal(201);
+  //     expect(res.body.data.projectImages)
+  //       .to.be.an("array")
+  //       .that.has.lengthOf(1);
+  //     expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
+  //   }).timeout(30000);
+
+  //   it("should get all projects (Public route)", async () => {
+  //     const res = await serChai.get("/api/v1/projects");
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.results).to.be.a("number");
+  //     expect(res.body.data).to.be.an("array");
+  //   });
+
+  //   // TEST 4: GET ONE (PUBLIC)
+  //   it("should get a single project by Id", async () => {
+  //     const res = await serChai.get(`/api/v1/projects/${projectId}`);
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.data._id).to.equal(projectId);
+  //   });
+
+  //   // TEST 5: UPDATE TEXT & REPLACE IMAGES
+  //   it("should update a project text and replace images", async () => {
+  //     const updateData = {
+  //       title: "Test Project Updated",
+  //       description: "Updated description",
+  //     };
+
+  //     const res = await serChai
+  //       .patch(`/api/v1/projects/${projectId}`)
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .field("title", updateData.title) // Fixed: was sending description here
+  //       .field("description", updateData.description)
+  //       .attach("projectImages", "../test/test-image-new.png"); // Send a new image to trigger replacement
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.data.title).to.equal(updateData.title);
+  //     // Check inside res.body.data, not res.body
+  //     expect(res.body.data.projectImages)
+  //       .to.be.an("array")
+  //       .that.has.lengthOf(1);
+  //   });
+
+  //   // TEST 6: DELETE PROJECT
+  //   it("should delete a project and its images", async () => {
+  //     const res = await serChai
+  //       .delete(`/api/v1/projects/${projectId}`)
+  //       .set({ Cookie: `jwt=${token}` });
+
+  //     expect(res.status).to.equal(200);
+  //     // Fixed typo: successufully -> successfully
+  //     expect(res.body.message).to.equal("Project deleted successfully");
+
+  //     const checkDb = await Projects.findById(projectId);
+  //     expect(checkDb).to.be.null;
+  //   });
+
+  //   // TEST 7: SECURITY (403 FORBIDDEN)
+  //   it("should return 403 when a normal user tries to create a project", async () => {
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${normalUserToken}` }) // Fixed missing '=' sign
+  //       .send({
+  //         title: "Hacker Project",
+  //         description: "I shouldn't be here",
+  //         techStack: "Hacking",
+  //       });
+
+  //     expect(res.status).to.equal(403);
+  //     expect(res.body.message).to.equal("Access Denied!");
+  //   });
+  // });
+
   describe("Test Project Work API", () => {
     let token;
     let projectId;
     let normalUserToken;
 
-    // 1. SETUP: Get Admin token and Normal User token
     before(async () => {
       // Login as Admin
       const res = await serChai
@@ -495,16 +641,12 @@ describe("My brand API Testing", () => {
       normalUserToken = normalLogin.body.token;
     });
 
-    // CLEANUP
-    afterEach(async () => {
-      await Projects.deleteMany({ title: /Test Project/i });
-    });
-
+    // ONLY CLEAN UP AT THE VERY END
     after(async () => {
+      await Projects.deleteMany({ title: /Test Project/i });
       await Users.deleteOne({ email: "normaluser@gmail.com" });
     });
 
-    // TEST 1: CREATE WITHOUT IMAGES
     it("should create a new project without images (Admin only)", async () => {
       const newProject = {
         title: "Test Project One",
@@ -524,11 +666,9 @@ describe("My brand API Testing", () => {
       expect(res.body.data.techStack).to.be.an("array").that.includes("React");
       expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
 
-      // Save the ID for the next tests
       projectId = res.body.data._id;
     });
 
-    // TEST 2: CREATE WITH IMAGES
     it("should create a new project with images (Admin only)", async () => {
       const res = await serChai
         .post("/api/v1/projects")
@@ -536,8 +676,6 @@ describe("My brand API Testing", () => {
         .field("title", "Test Project With Images")
         .field("description", "Description here")
         .field("techStack", "HTML, CSS, JS")
-        // Note: Path is relative to where you run 'npm test'.
-        // If your test folder is in the root, this is correct.
         .attach("projectImages", "./test/test-image.png");
 
       expect(res.status).to.equal(201);
@@ -545,9 +683,8 @@ describe("My brand API Testing", () => {
         .to.be.an("array")
         .that.has.lengthOf(1);
       expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
-    }).timeout(30000);
+    }).timeout(20000);
 
-    // TEST 3: GET ALL (PUBLIC)
     it("should get all projects (Public route)", async () => {
       const res = await serChai.get("/api/v1/projects");
 
@@ -556,15 +693,25 @@ describe("My brand API Testing", () => {
       expect(res.body.data).to.be.an("array");
     });
 
-    // TEST 4: GET ONE (PUBLIC)
     it("should get a single project by Id", async () => {
-      const res = await serChai.get(`/api/v1/projects/${projectId}`);
+      // Safety check: If projectId is somehow missing, create it quickly
+      if (!projectId) {
+        const resCreate = await serChai
+          .post("/api/v1/projects")
+          .set({ Cookie: `jwt=${token}` })
+          .send({
+            title: "Test Project Fallback",
+            description: "Desc",
+            techStack: "JS",
+          });
+        projectId = resCreate.body.data._id;
+      }
 
+      const res = await serChai.get(`/api/v1/projects/${projectId}`);
       expect(res.status).to.equal(200);
       expect(res.body.data._id).to.equal(projectId);
     });
 
-    // TEST 5: UPDATE TEXT & REPLACE IMAGES
     it("should update a project text and replace images", async () => {
       const updateData = {
         title: "Test Project Updated",
@@ -574,37 +721,34 @@ describe("My brand API Testing", () => {
       const res = await serChai
         .patch(`/api/v1/projects/${projectId}`)
         .set({ Cookie: `jwt=${token}` })
-        .field("title", updateData.title) // Fixed: was sending description here
+        .field("title", updateData.title)
         .field("description", updateData.description)
-        .attach("projectImages", "./test/test-image-new.png"); // Send a new image to trigger replacement
+        // MAKE SURE THIS FILE EXISTS IN YOUR FOLDER!
+        .attach("projectImages", "./test/test-image-new.png");
 
       expect(res.status).to.equal(200);
       expect(res.body.data.title).to.equal(updateData.title);
-      // Check inside res.body.data, not res.body
       expect(res.body.data.projectImages)
         .to.be.an("array")
         .that.has.lengthOf(1);
-    });
+    }).timeout(20000);
 
-    // TEST 6: DELETE PROJECT
     it("should delete a project and its images", async () => {
       const res = await serChai
         .delete(`/api/v1/projects/${projectId}`)
         .set({ Cookie: `jwt=${token}` });
 
       expect(res.status).to.equal(200);
-      // Fixed typo: successufully -> successfully
       expect(res.body.message).to.equal("Project deleted successfully");
 
       const checkDb = await Projects.findById(projectId);
       expect(checkDb).to.be.null;
     });
 
-    // TEST 7: SECURITY (403 FORBIDDEN)
     it("should return 403 when a normal user tries to create a project", async () => {
       const res = await serChai
         .post("/api/v1/projects")
-        .set({ Cookie: `jwt=${normalUserToken}` }) // Fixed missing '=' sign
+        .set({ Cookie: `jwt=${normalUserToken}` })
         .send({
           title: "Hacker Project",
           description: "I shouldn't be here",

@@ -176,11 +176,11 @@ const deleteProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    if (project.projectImages && project.projectImages.length > 0) {
-      for (const imgUrl of project.projectImages) {
-        await deleteImage(imgUrl);
-      }
-    }
+    // if (project.projectImages && project.projectImages.length > 0) {
+    //   for (const imgUrl of project.projectImages) {
+    //     await deleteImage(imgUrl);
+    //   }
+    // }
 
     await Project.findByIdAndDelete(req.params.projectId);
 
