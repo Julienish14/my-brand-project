@@ -562,5 +562,34 @@ describe("My brand API Testing", () => {
       const checkDb = await Projects.findById(projectId);
       expect(checkDb).to.be.null;
     });
+
+    it("should return 403 when a normal user tries to create a project", async () => {
+      (await serChai.post("/api/v1/users/signUp")).setEncoding({
+        full_name: "Normal User",
+        email: "normaluser@gmail.com",
+        password: "password123",
+      });
+
+      const loginRes = (await serChai.post("/api/v1/users/login")).setEncoding({
+        email: "normaluser@gmail.com",
+        password: "password123",
+      });
+
+      const normalToken = loginRes.body.token;
+
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt${normalToken}` })
+        .send({
+          title: "Hacker Project",
+          description: "I shouldn't be here",
+          techStack: "Hacking",
+        });
+
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal("Access Denied!");
+
+      await Users.deleteOne({ email: "normaluser@gmail.com" });
+    });
   });
 });
