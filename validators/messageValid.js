@@ -6,7 +6,7 @@ const messageValidation = {
       name: Joi.string().required(),
       email: Joi.string()
         .lowercase()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+        .email({ minDomainSegments: 2 })
         .required(),
       message: Joi.string().required(),
     }),

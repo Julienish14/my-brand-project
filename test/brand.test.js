@@ -508,7 +508,7 @@ describe("My brand API Testing", () => {
         .set({ Cookie: `jwt=${token}` })
         .field("title", "Test Project With Images")
         .field("techStack", "HTML, CSS, JS")
-        .attach("projectImages", "")
+        .attach("projectImages", "../test/test-image.png")
         .attach("projectImages", "");
 
       expect(res.status).to.equal(201);
@@ -524,6 +524,31 @@ describe("My brand API Testing", () => {
       expect(res.status).to.equal(200);
       expect(res.body.results).to.be.a("number");
       expect(res.body.data).to.be.an("array");
+    });
+
+    it("should get a single project by Id", async () => {
+      const res = await serChai.get(`/api/v1/projects/${projectId}`);
+
+      expect(res.status).to.equal(200);
+      expect(res.body.data._id).to.equal(projectId);
+    });
+
+    it("should update a project text and replace iamges", async () => {
+      const updateData = {
+        title: "Test Project Updated",
+        description: "Updated description",
+      };
+
+      const res = await serChai
+        .patch(`/api/v1/projects/${projectId}`)
+        .set({ Cookie: `jwt=${token}` })
+        .field("title", updateData.description)
+        .field("description", updateData.description)
+        .attach("projectImages", "../test/test-image-new.png");
+
+      expect(res.status).to.equal(200);
+      expect(res.body.data.title).to.equal(updateData.title);
+      expect(res.body.projectImages).to.be.an("array").that.has.lengthOf(1);
     });
   });
 });
