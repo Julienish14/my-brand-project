@@ -216,7 +216,7 @@ const getSpecificUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
- try {
+  try {
     const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -237,18 +237,26 @@ const updateUser = async (req, res) => {
       if (user.profileImage) {
         await deleteImage(user.profileImage);
       }
-        updateData.profileImage = await uploadImage(req.file);
+      updateData.profileImage = await uploadImage(req.file);
     }
-     const updatedUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       { $set: updateData },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).select("-password");
 
     return res.status(200).json({
       message: "User profile updated successfully!",
       data: updatedUser,
     });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: "fail",
+      message: "Failed to update user",
+      error: error.message,
+    });
+  }
 };
 
 const deleteUser = async (req, res) => {
