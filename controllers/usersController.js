@@ -237,6 +237,8 @@ const updateUser = async (req, res) => {
       if (user.profileImage) {
         await deleteImage(user.profileImage);
       }
+        updateData.profileImage = await uploadImage(req.file);
+    }
 };
 
 const deleteUser = async (req, res) => {
