@@ -29,7 +29,7 @@ describe("My brand API Testing", () => {
   });
 
   before(async function () {
-    // this.timeout(30000);
+    this.timeout(30000);
 
     if (mongoose.connection.readyState === 0) {
       await new Promise((resolve) => setTimeout(resolve, 2000));

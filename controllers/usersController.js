@@ -2,6 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { ref } = require("joi");
+const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
 const signUp = (req, res, next) => {
   User.findOne({ email: req.body.email.toLowerCase() })
