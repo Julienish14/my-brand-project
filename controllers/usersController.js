@@ -239,6 +239,16 @@ const updateUser = async (req, res) => {
       }
         updateData.profileImage = await uploadImage(req.file);
     }
+     const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    return res.status(200).json({
+      message: "User profile updated successfully!",
+      data: updatedUser,
+    });
 };
 
 const deleteUser = async (req, res) => {
