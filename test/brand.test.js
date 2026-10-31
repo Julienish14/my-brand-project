@@ -6,6 +6,7 @@ const Articles = require("../models/Post");
 const Messages = require("../models/Message.js");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Projects = require("../models/Project.js");
 
 const expect = chai.expect;
 const should = chai.should();
@@ -13,13 +14,27 @@ chai.use(chaiHttp);
 
 const serChai = chai.request(server).keepOpen();
 
-describe("My brand api testing", () => {
+describe("My brand API Testing", () => {
+  describe("Welcome to the API", () => {
+    it("should return welcome text from server", (done) => {
+      chai
+        .request(server)
+        .get("/")
+        .end((err, res) => {
+          should.not.exist(err);
+          res.should.have.status(200);
+          done();
+        });
+    }).timeout(30000);
+  });
+
   before(async function () {
-    this.timeout(30000);
+    // this.timeout(30000);
 
     if (mongoose.connection.readyState === 0) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
+
     const hashedPassword = await bcrypt.hash("julish123", 10);
     const adminData = {
       full_name: "Admin User",
@@ -27,14 +42,11 @@ describe("My brand api testing", () => {
       password: hashedPassword,
       isAdmin: true,
     };
-
     await Users.findOneAndUpdate({ email: adminData.email }, adminData, {
       upsert: true,
       new: true,
       setDefaultsOnInsert: true,
     });
-
-    console.log("Admin user is ready for testing.");
   });
 
   after(async () => {
@@ -53,25 +65,12 @@ describe("My brand api testing", () => {
     }
   });
 
-  describe("Welcome to api", () => {
-    it("should return welcome text from server", (done) => {
-      chai
-        .request(server)
-        .get("/")
-        .end((err, res) => {
-          should.not.exist(err);
-          res.should.have.status(200);
-          done();
-        });
-    }).timeout(30000);
-  });
-
-  describe("should test users signup", () => {
+  describe("Should test users registration", () => {
     afterEach(async () => {
       await Users.deleteOne({ email: "julish1@gmail.com" });
     });
 
-    it("should sign new user", (done) => {
+    it("should register a new user", (done) => {
       const user = {
         full_name: "Julien ishimwe",
         email: "julish1@gmail.com",
@@ -86,7 +85,7 @@ describe("My brand api testing", () => {
         });
     }).timeout(25000);
 
-    it("should throw a message Email already exist", (done) => {
+    it("should throw a message, if the email already exist", (done) => {
       const user = {
         full_name: "Julio ish",
         email: "julish123@gmail.com",
@@ -102,7 +101,7 @@ describe("My brand api testing", () => {
         });
     }).timeout(30000);
 
-    it("Should throw error when there's validation error", (done) => {
+    it("should throw error when there's validation error", (done) => {
       const user = {
         full_name: "Julius ish",
         email: "julishmail.com",
@@ -466,5 +465,298 @@ describe("My brand api testing", () => {
             });
         });
     }).timeout(30000);
+  });
+
+  // describe("Test Project Work API", () => {
+  //   let token;
+  //   let projectId;
+  //   let normalUserToken;
+
+  //   // 1. SETUP: Get Admin token and Normal User token
+  //   before(async () => {
+  //     // Login as Admin
+  //     const res = await serChai
+  //       .post("/api/v1/users/login")
+  //       .send({ email: "julish123@gmail.com", password: "julish123" });
+  //     token = res.body.token;
+
+  //     // Create a Normal User
+  //     await serChai.post("/api/v1/users/signUp").send({
+  //       full_name: "Normal User",
+  //       email: "normaluser@gmail.com",
+  //       password: "password123",
+  //     });
+
+  //     // Login as Normal User
+  //     const normalLogin = await serChai.post("/api/v1/users/login").send({
+  //       email: "normaluser@gmail.com",
+  //       password: "password123",
+  //     });
+  //     normalUserToken = normalLogin.body.token;
+  //   });
+
+  //   // CLEANUP
+  //   afterEach(async () => {
+  //     await Projects.deleteMany({ title: /Test Project/i });
+  //   });
+
+  //   after(async () => {
+  //     await Users.deleteOne({ email: "normaluser@gmail.com" });
+  //   });
+
+  //   // TEST 1: CREATE WITHOUT IMAGES
+  //   it("should create a new project without images (Admin only)", async () => {
+  //     const newProject = {
+  //       title: "Test Project One",
+  //       description: "A test project description",
+  //       techStack: "React, Node.Js, MongoDB",
+  //       githubLink: "https://github.com/test",
+  //       liveLink: "https://test.com",
+  //     };
+
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .send(newProject);
+
+  //     expect(res.status).to.equal(201);
+  //     expect(res.body.data.title).to.equal(newProject.title);
+  //     expect(res.body.data.techStack).to.be.an("array").that.includes("React");
+  //     expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
+
+  //     // Save the ID for the next tests
+  //     projectId = res.body.data._id;
+  //   });
+
+  //   // TEST 2: CREATE WITH IMAGES
+  //   it("should create a new project with images (Admin only)", async () => {
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .field("title", "Test Project With Images")
+  //       .field("description", "Description here")
+  //       .field("techStack", "HTML, CSS, JS")
+
+  //       .attach("projectImages", "./test/test-image.png");
+
+  //     expect(res.status).to.equal(201);
+  //     expect(res.body.data.projectImages)
+  //       .to.be.an("array")
+  //       .that.has.lengthOf(1);
+  //     expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
+  //   }).timeout(30000);
+
+  //   it("should get all projects (Public route)", async () => {
+  //     const res = await serChai.get("/api/v1/projects");
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.results).to.be.a("number");
+  //     expect(res.body.data).to.be.an("array");
+  //   });
+
+  //   // TEST 4: GET ONE (PUBLIC)
+  //   it("should get a single project by Id", async () => {
+  //     const res = await serChai.get(`/api/v1/projects/${projectId}`);
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.data._id).to.equal(projectId);
+  //   });
+
+  //   // TEST 5: UPDATE TEXT & REPLACE IMAGES
+  //   it("should update a project text and replace images", async () => {
+  //     const updateData = {
+  //       title: "Test Project Updated",
+  //       description: "Updated description",
+  //     };
+
+  //     const res = await serChai
+  //       .patch(`/api/v1/projects/${projectId}`)
+  //       .set({ Cookie: `jwt=${token}` })
+  //       .field("title", updateData.title) // Fixed: was sending description here
+  //       .field("description", updateData.description)
+  //       .attach("projectImages", "../test/test-image-new.png"); // Send a new image to trigger replacement
+
+  //     expect(res.status).to.equal(200);
+  //     expect(res.body.data.title).to.equal(updateData.title);
+  //     // Check inside res.body.data, not res.body
+  //     expect(res.body.data.projectImages)
+  //       .to.be.an("array")
+  //       .that.has.lengthOf(1);
+  //   });
+
+  //   // TEST 6: DELETE PROJECT
+  //   it("should delete a project and its images", async () => {
+  //     const res = await serChai
+  //       .delete(`/api/v1/projects/${projectId}`)
+  //       .set({ Cookie: `jwt=${token}` });
+
+  //     expect(res.status).to.equal(200);
+  //     // Fixed typo: successufully -> successfully
+  //     expect(res.body.message).to.equal("Project deleted successfully");
+
+  //     const checkDb = await Projects.findById(projectId);
+  //     expect(checkDb).to.be.null;
+  //   });
+
+  //   // TEST 7: SECURITY (403 FORBIDDEN)
+  //   it("should return 403 when a normal user tries to create a project", async () => {
+  //     const res = await serChai
+  //       .post("/api/v1/projects")
+  //       .set({ Cookie: `jwt=${normalUserToken}` }) // Fixed missing '=' sign
+  //       .send({
+  //         title: "Hacker Project",
+  //         description: "I shouldn't be here",
+  //         techStack: "Hacking",
+  //       });
+
+  //     expect(res.status).to.equal(403);
+  //     expect(res.body.message).to.equal("Access Denied!");
+  //   });
+  // });
+
+  describe("Test Project Work API", () => {
+    let token;
+    let projectId;
+    let normalUserToken;
+
+    before(async () => {
+      // Login as Admin
+      const res = await serChai
+        .post("/api/v1/users/login")
+        .send({ email: "julish123@gmail.com", password: "julish123" });
+      token = res.body.token;
+
+      // Create a Normal User
+      await serChai.post("/api/v1/users/signUp").send({
+        full_name: "Normal User",
+        email: "normaluser@gmail.com",
+        password: "password123",
+      });
+
+      // Login as Normal User
+      const normalLogin = await serChai.post("/api/v1/users/login").send({
+        email: "normaluser@gmail.com",
+        password: "password123",
+      });
+      normalUserToken = normalLogin.body.token;
+    });
+
+    // ONLY CLEAN UP AT THE VERY END
+    after(async () => {
+      await Projects.deleteMany({ title: /Test Project/i });
+      await Users.deleteOne({ email: "normaluser@gmail.com" });
+    });
+
+    it("should create a new project without images (Admin only)", async () => {
+      const newProject = {
+        title: "Test Project One",
+        description: "A test project description",
+        techStack: "React, Node.Js, MongoDB",
+        githubLink: "https://github.com/test",
+        liveLink: "https://test.com",
+      };
+
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${token}` })
+        .send(newProject);
+
+      expect(res.status).to.equal(201);
+      expect(res.body.data.title).to.equal(newProject.title);
+      expect(res.body.data.techStack).to.be.an("array").that.includes("React");
+      expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
+
+      projectId = res.body.data._id;
+    });
+
+    it("should create a new project with images (Admin only)", async () => {
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${token}` })
+        .field("title", "Test Project With Images")
+        .field("description", "Description here")
+        .field("techStack", "HTML, CSS, JS")
+        .attach("projectImages", "./test/test-image.png");
+
+      expect(res.status).to.equal(201);
+      expect(res.body.data.projectImages)
+        .to.be.an("array")
+        .that.has.lengthOf(1);
+      expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
+    }).timeout(20000);
+
+    it("should get all projects (Public route)", async () => {
+      const res = await serChai.get("/api/v1/projects");
+
+      expect(res.status).to.equal(200);
+      expect(res.body.results).to.be.a("number");
+      expect(res.body.data).to.be.an("array");
+    });
+
+    it("should get a single project by Id", async () => {
+      // Safety check: If projectId is somehow missing, create it quickly
+      if (!projectId) {
+        const resCreate = await serChai
+          .post("/api/v1/projects")
+          .set({ Cookie: `jwt=${token}` })
+          .send({
+            title: "Test Project Fallback",
+            description: "Desc",
+            techStack: "JS",
+          });
+        projectId = resCreate.body.data._id;
+      }
+
+      const res = await serChai.get(`/api/v1/projects/${projectId}`);
+      expect(res.status).to.equal(200);
+      expect(res.body.data._id).to.equal(projectId);
+    });
+
+    it("should update a project text and replace images", async () => {
+      const updateData = {
+        title: "Test Project Updated",
+        description: "Updated description",
+      };
+
+      const res = await serChai
+        .patch(`/api/v1/projects/${projectId}`)
+        .set({ Cookie: `jwt=${token}` })
+        .field("title", updateData.title)
+        .field("description", updateData.description)
+        // MAKE SURE THIS FILE EXISTS IN YOUR FOLDER!
+        .attach("projectImages", "./test/test-image-new.png");
+
+      expect(res.status).to.equal(200);
+      expect(res.body.data.title).to.equal(updateData.title);
+      expect(res.body.data.projectImages)
+        .to.be.an("array")
+        .that.has.lengthOf(1);
+    }).timeout(20000);
+
+    it("should delete a project and its images", async () => {
+      const res = await serChai
+        .delete(`/api/v1/projects/${projectId}`)
+        .set({ Cookie: `jwt=${token}` });
+
+      expect(res.status).to.equal(200);
+      expect(res.body.message).to.equal("Project deleted successfully");
+
+      const checkDb = await Projects.findById(projectId);
+      expect(checkDb).to.be.null;
+    });
+
+    it("should return 403 when a normal user tries to create a project", async () => {
+      const res = await serChai
+        .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${normalUserToken}` })
+        .send({
+          title: "Hacker Project",
+          description: "I shouldn't be here",
+          techStack: "Hacking",
+        });
+
+      expect(res.status).to.equal(403);
+      expect(res.body.message).to.equal("Access Denied!");
+    });
   });
 });
