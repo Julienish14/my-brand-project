@@ -25,10 +25,11 @@ const UserSchema = mongoose.Schema({
   },
   website: {
     type: String,
+    default: "",
   },
   profileImage: {
     type: String,
-    de,
+    default: "",
   },
 });
 
