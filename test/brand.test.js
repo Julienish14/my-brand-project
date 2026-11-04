@@ -3,10 +3,11 @@ const chaiHttp = require("chai-http");
 const server = require("../app.js");
 const Users = require("../models/User");
 const Articles = require("../models/Post");
+const Projects = require("../models/Project.js");
 const Messages = require("../models/Message.js");
+const Comments = require("../models/Comment.js");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const Projects = require("../models/Project.js");
 
 const expect = chai.expect;
 const should = chai.should();
@@ -58,6 +59,14 @@ describe("My brand API Testing", () => {
         },
       });
       await Messages.deleteMany({});
+      await Comments.deleteMany(
+        {
+          text: {
+            $ne: "This article is missing few things! like how AI work, etc...",
+          },
+        } && { commentedby: { $ne: "julish admin" } },
+      );
+
       console.log("Database cleaned. Admin preserved.");
       serChai.close();
     } catch (error) {
