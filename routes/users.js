@@ -218,7 +218,7 @@ const protect = require("../middleware/protected");
 //Create users or call it signUP
 router
   .route("/signUp")
-  .post(validate(usersValidation.createUpdateUser), usersController.signUp);
+  .post(validate(usersValidation.signUp), usersController.signUp);
 
 //Login
 router.route("/login").post(usersController.login);
@@ -236,7 +236,7 @@ router
   .get(usersController.getSpecificUser)
 
   //Update the user
-  .patch(validate(usersValidation.createUpdateUser), usersController.updateUser)
+  .patch(validate(usersValidation.updateUser), usersController.updateUser)
 
   //Delete the user account
   .delete([checkAuth, protect], usersController.deleteUser);

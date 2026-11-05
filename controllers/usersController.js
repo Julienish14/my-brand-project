@@ -1,10 +1,14 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { ref } = require("joi");
+const usersValidation = require("../validators/usersValid");
 const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
 const signUp = async (req, res, next) => {
+  const { error } = usersValidation.signUp.body.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
   try {
     const { full_name, email, password, bio, location, website } = req.body;
 
