@@ -23,7 +23,7 @@ const usersValidation = {
       password: passwordSchema.required().messages({
         "any.required": "Password is required",
       }),
-      boi: Joi.string()
+      bio: Joi.string()
         .max(500)
         .allow("")
         .optional()
