@@ -23,6 +23,10 @@ const UserSchema = mongoose.Schema({
     type: String,
     maxlength: 500,
   },
+  location: {
+    type: String,
+    maxlength: 100,
+  },
   website: {
     type: String,
     default: "",
