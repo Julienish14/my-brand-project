@@ -1,13 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {validate} = require('express-validation');
-const { valid } = require('joi');
+const { validate } = require("express-validation");
+const { valid } = require("joi");
 
-const usersController = require('../controllers/usersController');
-const usersValidation = require('../validators/usersValid');
-const checkAuth = require('../middleware/check-auth');
-const protect = require('../middleware/protected')
-
+const usersController = require("../controllers/usersController");
+const usersValidation = require("../validators/usersValid");
+const checkAuth = require("../middleware/check-auth");
+const protect = require("../middleware/protected");
 
 /**
  * @swagger
@@ -15,7 +14,7 @@ const protect = require('../middleware/protected')
  *  schemas:
  *       Users:
  *          type: object
- *          required: 
+ *          required:
  *              - full_name
  *              - email
  *              - password
@@ -29,7 +28,7 @@ const protect = require('../middleware/protected')
  *                  description: full name of the sign up user
  *              email:
  *                  type: string
- *                  description: valid email of the user 
+ *                  description: valid email of the user
  *              password:
  *                  type: string
  *                  description: valid password of the user
@@ -40,9 +39,8 @@ const protect = require('../middleware/protected')
  *              full_name: name my name
  *              email: email@gmail.com
  *              password: string
- *                  
+ *
  */
-
 
 /**
  * @swagger
@@ -61,8 +59,8 @@ const protect = require('../middleware/protected')
 /**
  * @swagger
  * /api/v1/users/signUp:
- *     post: 
- *        summary: user sign up 
+ *     post:
+ *        summary: user sign up
  *        tags: [Auth]
  *        requestBody:
  *              required: true
@@ -71,23 +69,23 @@ const protect = require('../middleware/protected')
  *                      schema:
  *                          $ref: '#/components/schemas/Users'
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: user signup successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Users'
  *                 500:
- *                    description: failed 
- * 
- *                  
+ *                    description: failed
+ *
+ *
  */
 
 /**
  * @swagger
  * /api/v1/users/login:
- *     post: 
- *        summary: user sign in 
+ *     post:
+ *        summary: user sign in
  *        tags: [Auth]
  *        requestBody:
  *              required: true
@@ -96,37 +94,34 @@ const protect = require('../middleware/protected')
  *                      schema:
  *                          $ref: '#/components/schemas/Users'
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: user sign in successfully
  *                    content:
- *                          application/json: 
+ *                          application/json:
  *                              schema:
  *                                  $ref: '#/components/schemas/Users'
  *                 500:
- *                    description: failed 
+ *                    description: failed
  *                 401:
  *                    description: unauthorized!
- * 
- *                  
+ *
+ *
  */
-
 
 /**
  * @swagger
  * /api/v1/users/logout:
- *     post: 
+ *     post:
  *        summary: user signout
  *        tags: [Auth]
  *        responses:
- *                 200: 
+ *                 200:
  *                    description: user logged out
  *                 500:
- *                    description: failed 
- * 
- *                  
+ *                    description: failed
+ *
+ *
  */
-
-
 
 /**
  * @swagger
@@ -135,13 +130,13 @@ const protect = require('../middleware/protected')
  *       summary: get all users who signup
  *       tags: [User]
  *       responses:
- *          200: 
+ *          200:
  *              description: get all users from who sign up as admin
- *              content: 
+ *              content:
  *                  application/json:
- *                      schema: 
+ *                      schema:
  *                          type: array
- *                          items: 
+ *                          items:
  *                            $ref: '#/components/schemas/Users'
  */
 
@@ -159,15 +154,14 @@ const protect = require('../middleware/protected')
  *            required: true
  *            description: The user id
  *      responses:
- *          200: 
+ *          200:
  *            description: the specific user by id
  *            content:
- *              application/json: 
- *                  schema: 
+ *              application/json:
+ *                  schema:
  *                      $ref: '#/components/schemas/Users'
- *        
+ *
  */
-
 
 /**
  * @swagger
@@ -178,7 +172,7 @@ const protect = require('../middleware/protected')
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: user id to update
@@ -188,16 +182,15 @@ const protect = require('../middleware/protected')
  *                  application/json:
  *                      schema:
  *                          $ref: '#/components/schemas/Users'
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: users profile updated successful
- *              404: 
+ *              404:
  *                description: user not found
  *              500:
  *                description: internal server error
  *
  */
-
 
 /**
  * @swagger
@@ -208,42 +201,44 @@ const protect = require('../middleware/protected')
  *          parameters:
  *              - in: path
  *                name: id
- *                schema: 
+ *                schema:
  *                    type: string
  *                required: true
  *                description: user's id to delete
- *          responses: 
- *              200: 
+ *          responses:
+ *              200:
  *                description: the user deleted successful
- *              404: 
+ *              404:
  *                description: user not found
  *              500:
  *                description: internal sever error
  *
  */
 
-
-//Create users or call it signUP 
-router.route('/signUp').post(validate(usersValidation.createUpdateUser) ,usersController.signUp)
+//Create users or call it signUP
+router
+  .route("/signUp")
+  .post(validate(usersValidation.createUpdateUser), usersController.signUp);
 
 //Login
-router.route('/login').post(usersController.login)
+router.route("/login").post(usersController.login);
 //Logout
- router.route('/logout').post(usersController.logout)
+router.route("/logout").post(usersController.logout);
 
-router.route('/')
-//Show all users 
-    .get([checkAuth,protect], usersController.getAllUsers);
+router
+  .route("/")
+  //Show all users
+  .get([checkAuth, protect], usersController.getAllUsers);
 
-router.route('/:userId')
-//Get single specific user
-    .get(usersController.getSpecificUser)
+router
+  .route("/:userId")
+  //Get single specific user
+  .get(usersController.getSpecificUser)
 
-//Update the user
-    .patch(validate(usersValidation.createUpdateUser), usersController.updateUser)
+  //Update the user
+  .patch(validate(usersValidation.createUpdateUser), usersController.updateUser)
 
-//Delete the user account
-    .delete([checkAuth,protect], usersController.deleteUser);
+  //Delete the user account
+  .delete([checkAuth, protect], usersController.deleteUser);
 
-
-module.exports = router; 
+module.exports = router;
