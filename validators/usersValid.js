@@ -38,6 +38,27 @@ const usersValidation = {
       }),
     }),
   },
+
+  updateUser: {
+    body: Joi.object({
+      full_name: Joi.string().min(2).max(50).optional().messages({
+        "string.empty": "Full name cannot be empty",
+      }),
+      email: Joi.string()
+        .email()
+        .optional()
+        .messages({ "string.email": "Please provide a valid email address" }),
+      password: passwordSchema.optional(),
+      bio: Joi.string()
+        .max(500)
+        .allow("")
+        .optional()
+        .messages({ "string.max": "Bio cannot exceed 500 characters" }),
+      website: Joi.string().uri().allow("").optional().messages({
+        "string.uri": "Please provide a valid URL (e.g., https://example.com)",
+      }),
+    }),
+  },
 };
 
 module.exports = usersValidation;
