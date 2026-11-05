@@ -218,7 +218,7 @@ const protect = require("../middleware/protected");
 //Create users or call it signUP
 router
   .route("/signUp")
-  .post(validate(usersValidation.createUpdateUser), usersController.signUp);
+  .post(validate(usersValidation.userValid), usersController.signUp);
 
 //Login
 router.route("/login").post(usersController.login);
