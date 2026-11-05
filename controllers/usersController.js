@@ -5,11 +5,14 @@ const usersValidation = require("../validators/usersValid");
 const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
 const signUp = async (req, res, next) => {
-  const { error } = usersValidation.signUp.body.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
   try {
+    const { error } = usersValidation.signUp.body.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        status: "fail",
+        message: error.details[0].message,
+      });
+    }
     const { full_name, email, password, bio, location, website } = req.body;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -128,6 +131,13 @@ const getSpecificUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const { error } = usersValidation.updateUser.body.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      status: "fail",
+      message: error.details[0].message,
+    });
+  }
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
