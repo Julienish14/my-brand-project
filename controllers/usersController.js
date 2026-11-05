@@ -134,6 +134,8 @@ const updateUser = async (req, res) => {
       full_name: req.body.full_name || user.full_name,
       email: req.body.email ? req.body.email.toLowerCase() : user.email,
       bio: req.body.bio !== undefined ? req.body.bio : user.bio,
+      location:
+        req.body.location !== undefined ? req.body.location : user.location,
       website: req.body.website !== undefined ? req.body.website : user.website,
     };
 
