@@ -8,10 +8,7 @@ const signUp = async (req, res, next) => {
   try {
     const { error } = usersValidation.signUp.body.validate(req.body);
     if (error) {
-      return res.status(400).json({
-        status: "fail",
-        message: error.details[0].message,
-      });
+      return next(error);
     }
     const { full_name, email, password, bio, location, website } = req.body;
 
