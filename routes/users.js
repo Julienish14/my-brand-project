@@ -1,12 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { validate } = require("express-validation");
-const { valid } = require("joi");
-
 const usersController = require("../controllers/usersController");
 const usersValidation = require("../validators/usersValid");
 const checkAuth = require("../middleware/check-auth");
 const protect = require("../middleware/protected");
+const { upload } = require("../utils/multer");
 
 /**
  * @swagger
@@ -216,10 +215,20 @@ const protect = require("../middleware/protected");
  */
 
 //Create users or call it signUP
-router
-  .route("/signUp")
-  .post(validate(usersValidation.userValid), usersController.signUp);
+// router
+//   .route("/signUp")
+//   .post(
+//     upload.single("profileImage"),
+//     validate(usersValidation.signUp),
+//     usersController.signUp,
+//   );
 
+router.post(
+  "/signUp",
+  upload.single("profileImage"), // <--- MUST BE FIRST
+  validate(usersValidation.signUp), // <--- MUST BE SECOND
+  usersController.signUp,
+);
 //Login
 router.route("/login").post(usersController.login);
 //Logout
@@ -236,7 +245,7 @@ router
   .get(usersController.getSpecificUser)
 
   //Update the user
-  .patch(validate(usersValidation.userValid), usersController.updateUser)
+  .patch(validate(usersValidation.updateUser), usersController.updateUser)
 
   //Delete the user account
   .delete([checkAuth, protect], usersController.deleteUser);

@@ -5,6 +5,7 @@ const cors = require("cors");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
 const cookieParser = require("cookie-parser");
+const errorHandler = require("./middleware/errorHandler");
 
 app.use(cors());
 app.options("*", cors());
@@ -70,9 +71,11 @@ mongoose
     console.log(`Not connected`, error);
   });
 
+app.use(errorHandler);
+
 //Listern to my server
 app.listen(PORT, () => {
-  console.log("Server is listerning on port : " + PORT);
+  console.log(`Server is listening on port : ${PORT}`);
 });
 
 module.exports = app;

@@ -6,10 +6,10 @@ const UserSchema = mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
   },
   password: {
     type: String,
-    unique: true,
   },
   date: {
     type: Date,
@@ -18,6 +18,22 @@ const UserSchema = mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default: false,
+  },
+  bio: {
+    type: String,
+    maxlength: 500,
+  },
+  location: {
+    type: String,
+    maxlength: 100,
+  },
+  website: {
+    type: String,
+    default: "",
+  },
+  profileImage: {
+    type: String,
+    default: "",
   },
 });
 
