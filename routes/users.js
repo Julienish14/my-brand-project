@@ -5,6 +5,7 @@ const usersController = require("../controllers/usersController");
 const usersValidation = require("../validators/usersValid");
 const checkAuth = require("../middleware/check-auth");
 const protect = require("../middleware/protected");
+const { upload } = require("../utils/multer");
 
 /**
  * @swagger
@@ -214,10 +215,20 @@ const protect = require("../middleware/protected");
  */
 
 //Create users or call it signUP
-router
-  .route("/signUp")
-  .post(validate(usersValidation.signUp), usersController.signUp);
+// router
+//   .route("/signUp")
+//   .post(
+//     upload.single("profileImage"),
+//     validate(usersValidation.signUp),
+//     usersController.signUp,
+//   );
 
+router.post(
+  "/signUp",
+  upload.single("profileImage"), // <--- MUST BE FIRST
+  validate(usersValidation.signUp), // <--- MUST BE SECOND
+  usersController.signUp,
+);
 //Login
 router.route("/login").post(usersController.login);
 //Logout

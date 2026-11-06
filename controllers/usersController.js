@@ -5,6 +5,8 @@ const usersValidation = require("../validators/usersValid");
 const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
 const signUp = async (req, res, next) => {
+  console.log("BODY RECEIVED BY CONTROLLER:", req.body);
+  console.log("FILE RECEIVED BY CONTROLLER:", req.file);
   try {
     const { error } = usersValidation.signUp.body.validate(req.body);
     if (error) {
