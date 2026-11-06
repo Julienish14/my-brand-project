@@ -1,51 +1,19 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { ref } = require("joi");
+const usersValidation = require("../validators/usersValid");
 const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
 const signUp = async (req, res, next) => {
-  // User.findOne({ email: req.body.email.toLowerCase() })
-  //   .exec()
-  //   .then((user) => {
-  //     if (user) {
-  //       return res.status(409).json({
-  //         message: "Email already Exist",
-  //       });
-  //     } else {
-  //       bcrypt.hash(req.body.password, 10, (err, hash) => {
-  //         if (err) {
-  //           return res.status(500).json({
-  //             error: err,
-  //           });
-  //         } else {
-  //           const user = new User({
-  //             full_name: req.body.full_name,
-  //             email: req.body.email.toLowerCase(),
-  //             password: hash,
-  //           });
-  //           user
-  //             .save()
-  //             .then((result) => {
-  //               res.status(201).json({
-  //                 message: "User Created Successfully!",
-  //                 data: {
-  //                   user,
-  //                 },
-  //               });
-  //             })
-  //             .catch((err) => {
-  //               console.log(err);
-  //               res.status(500).json({
-  //                 error: err,
-  //               });
-  //             });
-  //         }
-  //       });
-  //     }
-  //   });
+  console.log("BODY RECEIVED BY CONTROLLER:", req.body);
+  console.log("FILE RECEIVED BY CONTROLLER:", req.file);
   try {
-    const { full_name, email, password, bio, website } = req.body;
+    const { error } = usersValidation.signUp.body.validate(req.body);
+    if (error) {
+      return next(error);
+    }
+
+    const { full_name, email, password, bio, location, website } = req.body;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -64,10 +32,11 @@ const signUp = async (req, res, next) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       bio,
+      location,
       website,
       profileImage: imageUrl,
     });
-
+    console.log("DATA GOING TO MONGOOSE:", newUser);
     await newUser.save();
 
     const userResponse = newUser.toObject();
@@ -82,60 +51,6 @@ const signUp = async (req, res, next) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-// const login = (req, res, next) => {
-//   User.find({ email: req.body.email })
-//     .exec()
-//     .then((user) => {
-//       if (user.length < 1) {
-//         return res.status(401).json({
-//           message: "You have no account! Please SignUp",
-//         });
-//       }
-//       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-//         if (err) {
-//           return res.status(401).json({
-//             message: "Invalid email or password",
-//           });
-//         }
-//         if (result) {
-//           const token = jwt.sign(
-//             {
-//               full_name: user[0].full_name,
-//               email: user[0].email,
-//               userId: user[0]._id,
-//               isAdmin: this.isAdmin,
-//             },
-//             process.env.JWT_KEY,
-//             {
-//               expiresIn: "24h",
-//             },
-//           );
-//           const cookieOptions = {
-//             expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-//             secure: false,
-//             httpOnly: true,
-//           };
-//           res.cookie("jwt", token, cookieOptions);
-
-//           return res.status(200).json({
-//             message: "logged in successfully!",
-//             token,
-//             user,
-//           });
-//         }
-//         return res.status(401).json({
-//           message: "Invalid email or password",
-//         });
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({
-//         error: err,
-//       });
-//     });
-// };
 
 const login = async (req, res, next) => {
   try {
@@ -216,6 +131,13 @@ const getSpecificUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const { error } = usersValidation.updateUser.body.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      status: "fail",
+      message: error.details[0].message,
+    });
+  }
   try {
     const user = await User.findById(req.params.userId);
     if (!user) {
@@ -226,6 +148,8 @@ const updateUser = async (req, res) => {
       full_name: req.body.full_name || user.full_name,
       email: req.body.email ? req.body.email.toLowerCase() : user.email,
       bio: req.body.bio !== undefined ? req.body.bio : user.bio,
+      location:
+        req.body.location !== undefined ? req.body.location : user.location,
       website: req.body.website !== undefined ? req.body.website : user.website,
     };
 
