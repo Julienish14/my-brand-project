@@ -22,10 +22,12 @@ const signUp = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    let imageUrl = "";
-    if (req.file) {
-      imageUrl = await uploadImage(req.file);
-    }
+     let imageUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageUrl = await uploadImage(file);
+        imageUrls.push(imageUrl);
+      }
     // 4. Create User
     const newUser = new User({
       full_name,
