@@ -75,7 +75,7 @@ app.use(errorHandler);
 
 //Listern to my server
 app.listen(PORT, () => {
-  console.log("Server is listerning on port : " + PORT);
+  console.log(`Server is listening on port : ${PORT}`);
 });
 
 module.exports = app;

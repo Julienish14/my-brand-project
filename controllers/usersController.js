@@ -10,6 +10,7 @@ const signUp = async (req, res, next) => {
     if (error) {
       return next(error);
     }
+
     const { full_name, email, password, bio, location, website } = req.body;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -33,7 +34,7 @@ const signUp = async (req, res, next) => {
       website,
       profileImage: imageUrl,
     });
-
+    console.log("DATA GOING TO MONGOOSE:", newUser);
     await newUser.save();
 
     const userResponse = newUser.toObject();

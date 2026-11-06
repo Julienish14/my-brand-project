@@ -1,24 +1,27 @@
 const multer = require("multer");
 
 const errorHandler = (err, req, res, next) => {
-  if (err.isJoi) {
+  console.log("🚨 ERROR CAUGHT:", err.name, err.message);
+
+  if (err.name === "ValidationError" && err.details && err.details.body) {
+    return res.status(400).json({
+      status: "fail",
+      message: err.details.body[0].message,
+    });
+  }
+
+  if (err.details && Array.isArray(err.details) && err.details.length > 0) {
     return res.status(400).json({
       status: "fail",
       message: err.details[0].message,
     });
   }
 
-  if (err.name === "ValidationError") {
+  if (err.name === "ValidationError" && err.errors) {
+    const messages = Object.values(err.errors).map((val) => val.message);
     return res.status(400).json({
       status: "fail",
-      message: err.message,
-    });
-  }
-
-  if (err.name === "CastError") {
-    return res.status(400).json({
-      status: "fail",
-      message: `Invalid ${err.path}: ${err.value}`,
+      message: messages.join(", "),
     });
   }
 
@@ -29,18 +32,10 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  if (err.statusCode) {
-    return res.status(err.statusCode).json({
-      status: "fail",
-      message: err.message,
-    });
-  }
-
   console.error("💥 GLOBAL ERROR:", err);
   res.status(500).json({
     status: "error",
     message: "Something went wrong on the server.",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined,
   });
 };
 
