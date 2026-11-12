@@ -27,6 +27,14 @@ const errorHandler = (err, req, res, next) => {
       message: messages.join(", "),
     });
   }
+
+  // 4. Handle Multer Errors (File uploads)
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({
+      status: "fail",
+      message: `Upload Error: ${err.message}`,
+    });
+  }
 };
 
 module.exports = errorHandler;
