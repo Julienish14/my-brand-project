@@ -11,6 +11,13 @@ const errorHandler = (err, req, res, next) => {
       message: err.details.body[0].message, // Extract the custom Joi message
     });
   }
+  // 2. Handle standard Joi errors (if validated directly inside the controller)
+  if (err.details && Array.isArray(err.details) && err.details.length > 0) {
+    return res.status(400).json({
+      status: "fail",
+      message: err.details[0].message,
+    });
+  }
 };
 
 module.exports = errorHandler;
