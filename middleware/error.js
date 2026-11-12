@@ -35,6 +35,13 @@ const errorHandler = (err, req, res, next) => {
       message: `Upload Error: ${err.message}`,
     });
   }
+
+  // 5. Fallback for any other unhandled errors
+  console.error("💥 GLOBAL ERROR:", err);
+  res.status(500).json({
+    status: "error",
+    message: "Something went wrong on the server.",
+  });
 };
 
 module.exports = errorHandler;
