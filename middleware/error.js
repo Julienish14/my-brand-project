@@ -18,6 +18,15 @@ const errorHandler = (err, req, res, next) => {
       message: err.details[0].message,
     });
   }
+
+  // 3. Handle Mongoose Validation Errors
+  if (err.name === "ValidationError" && err.errors) {
+    const messages = Object.values(err.errors).map((val) => val.message);
+    return res.status(400).json({
+      status: "fail",
+      message: messages.join(", "),
+    });
+  }
 };
 
 module.exports = errorHandler;
