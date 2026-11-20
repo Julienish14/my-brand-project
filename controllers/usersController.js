@@ -4,9 +4,60 @@ const jwt = require("jsonwebtoken");
 const usersValidation = require("../validators/usersValid");
 const { uploadImage, deleteImage } = require("../utils/cloudinary");
 
+// const signUp = async (req, res, next) => {
+//   console.log("BODY RECEIVED BY CONTROLLER:", req.body);
+//   console.log("FILE RECEIVED BY CONTROLLER:", req.file);
+//   try {
+//     const { error } = usersValidation.signUp.body.validate(req.body);
+//     if (error) {
+//       return next(error);
+//     }
+
+//     const { full_name, email, password, bio, location, website } = req.body;
+
+//     const existingUser = await User.findOne({ email: email.toLowerCase() });
+//     if (existingUser) {
+//       return res.status(409).json({ message: "Email already Exist" });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+
+//     let imageUrls = [];
+//     if (req.files && req.files.length > 0) {
+//       for (const file of req.files) {
+//         const imageUrl = await uploadImage(file);
+//         imageUrls.push(imageUrl);
+//       }
+//     }
+//     // 4. Create User
+//     const newUser = new User({
+//       full_name,
+//       email: email.toLowerCase(),
+//       password: hashedPassword,
+//       bio,
+//       location,
+//       website,
+//       profileImage: imageUrl,
+//     });
+//     console.log("DATA GOING TO MONGOOSE:", newUser);
+//     await newUser.save();
+
+//     const userResponse = newUser.toObject();
+//     delete userResponse.password;
+
+//     res.status(201).json({
+//       message: "User Created Successfully!",
+//       data: { user: userResponse },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 const signUp = async (req, res, next) => {
   console.log("BODY RECEIVED BY CONTROLLER:", req.body);
   console.log("FILE RECEIVED BY CONTROLLER:", req.file);
+
   try {
     const { error } = usersValidation.signUp.body.validate(req.body);
     if (error) {
@@ -22,12 +73,12 @@ const signUp = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-     let imageUrls = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const imageUrl = await uploadImage(file);
-        imageUrls.push(imageUrl);
-      }
+    let imageUrl = "";
+
+    if (req.file) {
+      imageUrl = await uploadImage(req.file);
+    }
+
     // 4. Create User
     const newUser = new User({
       full_name,
@@ -36,8 +87,9 @@ const signUp = async (req, res, next) => {
       bio,
       location,
       website,
-      profileImage: imageUrl,
+      profileImage: imageUrl, // Now it will not crash. It will be "" if no file, or the URL if a file was sent.
     });
+
     console.log("DATA GOING TO MONGOOSE:", newUser);
     await newUser.save();
 
@@ -53,7 +105,6 @@ const signUp = async (req, res, next) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
