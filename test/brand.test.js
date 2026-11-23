@@ -640,8 +640,7 @@ describe("My brand API Testing", () => {
 
       expect(res.status).to.equal(400);
       expect(res.body.status).to.equal("fail");
-      expect(res.body.message).to.include("Invalid");
-    }).timeout(30000);
+    });
 
     it("should return 400 if a non-image file is uploaded", async () => {
       const res = await serChai
@@ -654,6 +653,7 @@ describe("My brand API Testing", () => {
 
       expect(res.status).to.equal(400);
       expect(res.body.status).to.equal("fail");
-    }).timeout(20000);
+      expect(res.body.message).to.include("Invalid file type");
+    });
   });
 });
