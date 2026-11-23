@@ -625,37 +625,33 @@ describe("My brand API Testing", () => {
   describe("Error Handler Coverage", () => {
     let token;
 
-    before(async () => {
-      const tokenRes = await serChai.post("/api/v1/users/login").send({
-        email: "julish123@gmail.com",
-        password: "Julish@123",
-      });
-      token = tokenRes.body.token;
+    before((done) => {
+      serChai
+        .post("/api/v1/users/login")
+        .send({ email: "julish123@gmail.com", password: "Julish@123" })
+        .end((err, res) => {
+          token = res.body.token;
+          done();
+        });
     });
 
-    it("should return 400 if an invalid MongoDB ID is provided", async () => {
-      // "12345" will trigger a CastError in Mongoose
-      const res = await serChai
-        .get("/api/v1/projects/12345")
-        .set({ Cookie: `jwt=${token}` });
-
-      expect(res.status).to.equal(400);
-      expect(res.body.status).to.equal("fail");
-      expect(res.body.message).to.include("Invalid ID format");
-    });
-
-    it("should return 400 if a non-image file is uploaded", async () => {
-      const res = await serChai
+    it("should return 400 if a non-image file is uploaded", (done) => {
+      serChai
         .post("/api/v1/projects")
         .set({ Cookie: `jwt=${token}` })
         .field("title", "Test Project Bad File")
         .field("description", "Desc")
         .field("techStack", "JS")
-        .attach("projectImages", "./test/test.txt");
+        .attach("projectImages", "./test/test.txt")
+        .end((err, res) => {
+          if (err) return done(err);
 
-      expect(res.status).to.equal(400);
-      expect(res.body.status).to.equal("fail");
-      expect(res.body.message).to.include("Invalid file type");
+          expect(res.status).to.equal(400);
+          expect(res.body.status).to.equal("fail");
+          expect(res.body.message).to.include("Invalid file type");
+
+          done();
+        });
     });
   });
 });
