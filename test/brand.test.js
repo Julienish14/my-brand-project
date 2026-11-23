@@ -621,4 +621,22 @@ describe("My brand API Testing", () => {
       expect(res.body.message).to.equal("Access Denied!");
     });
   });
+
+  describe("Error Handler Coverage", () => {
+    it("should return 400 if an invalid MongoDB ID is provided", async () => {
+      const tokenRes = await serChai.post("/api/v1/users/login").send({
+        email: "julish123@gmail.com",
+        password: "Julish@123",
+      });
+      const token = tokenRes.body.token;
+
+      const res = await serChai
+        .get("/api/v1/projects/12345")
+        .set({ Cookie: `jwt=${token}` });
+
+      expect(res.status).to.equal(400);
+      expect(res.body.status).to.equal("fail");
+      expect(res.body.message).to.include("Invalid");
+    });
+  });
 });
