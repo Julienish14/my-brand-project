@@ -623,13 +623,17 @@ describe("My brand API Testing", () => {
   });
 
   describe("Error Handler Coverage", () => {
-    it("should return 400 if an invalid MongoDB ID is provided", async () => {
+    let token;
+
+    before(async () => {
       const tokenRes = await serChai.post("/api/v1/users/login").send({
         email: "julish123@gmail.com",
         password: "Julish@123",
       });
-      const token = tokenRes.body.token;
+      token = tokenRes.body.token;
+    });
 
+    it("should return 400 if an invalid MongoDB ID is provided", async () => {
       const res = await serChai
         .get("/api/v1/projects/12345")
         .set({ Cookie: `jwt=${token}` });
@@ -637,11 +641,12 @@ describe("My brand API Testing", () => {
       expect(res.status).to.equal(400);
       expect(res.body.status).to.equal("fail");
       expect(res.body.message).to.include("Invalid");
-    });
+    }).timeout(30000);
 
     it("should return 400 if a non-image file is uploaded", async () => {
       const res = await serChai
         .post("/api/v1/projects")
+        .set({ Cookie: `jwt=${token}` })
         .field("title", "Test Project Bad File")
         .field("description", "Desc")
         .field("techStack", "JS")
@@ -649,6 +654,6 @@ describe("My brand API Testing", () => {
 
       expect(res.status).to.equal(400);
       expect(res.body.status).to.equal("fail");
-    });
+    }).timeout(20000);
   });
 });

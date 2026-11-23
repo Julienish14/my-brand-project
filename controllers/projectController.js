@@ -63,9 +63,7 @@ const getOneProject = async (req, res) => {
       data: project,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to get project", error: error.message });
+    next(error);
   }
 };
 
