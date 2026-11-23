@@ -39,7 +39,7 @@ const signUp = async (req, res, next) => {
       profileImage: imageUrl,
     });
 
-    console.log("DATA GOING TO MONGOOSE:", newUser);
+    // console.log("DATA GOING TO MONGOOSE:", newUser);
     await newUser.save();
 
     const userResponse = newUser.toObject();

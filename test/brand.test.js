@@ -634,12 +634,14 @@ describe("My brand API Testing", () => {
     });
 
     it("should return 400 if an invalid MongoDB ID is provided", async () => {
+      // "12345" will trigger a CastError in Mongoose
       const res = await serChai
         .get("/api/v1/projects/12345")
         .set({ Cookie: `jwt=${token}` });
 
       expect(res.status).to.equal(400);
       expect(res.body.status).to.equal("fail");
+      expect(res.body.message).to.include("Invalid ID format");
     });
 
     it("should return 400 if a non-image file is uploaded", async () => {
