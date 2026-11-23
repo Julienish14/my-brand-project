@@ -36,7 +36,7 @@ describe("My brand API Testing", () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
 
-    const hashedPassword = await bcrypt.hash("julish123", 10);
+    const hashedPassword = await bcrypt.hash("Julish@123", 10);
     const adminData = {
       full_name: "Admin User",
       email: "julish123@gmail.com",
@@ -83,7 +83,7 @@ describe("My brand API Testing", () => {
       const user = {
         full_name: "Julien ishimwe",
         email: "julish1@gmail.com",
-        password: "julish1234",
+        password: "Julish@1234",
       };
       serChai
         .post("/api/v1/users/signUp")
@@ -98,7 +98,7 @@ describe("My brand API Testing", () => {
       const user = {
         full_name: "Julio ish",
         email: "julish123@gmail.com",
-        password: "julish123",
+        password: "Julish@123",
       };
       serChai
         .post("/api/v1/users/signUp")
@@ -114,7 +114,7 @@ describe("My brand API Testing", () => {
       const user = {
         full_name: "Julius ish",
         email: "julishmail.com",
-        password: "julish1233",
+        password: "Julish123!",
       };
       serChai
         .post("/api/v1/users/signUp")
@@ -128,7 +128,10 @@ describe("My brand API Testing", () => {
 
   describe("User Login, Get users, Update Profile and delete", () => {
     it("should login and get all signed up user as Admin", (done) => {
-      const userLogin = { email: "julish123@gmail.com", password: "julish123" };
+      const userLogin = {
+        email: "julish123@gmail.com",
+        password: "Julish@123",
+      };
 
       serChai
         .post("/api/v1/users/login")
@@ -173,12 +176,12 @@ describe("My brand API Testing", () => {
       const new_user = {
         full_name: "great eric",
         email: "greateric1@gmail.com",
-        password: "greatEric123",
+        password: "greatEric@123!",
       };
       const update_user = {
         full_name: "great eric kanya",
         email: "greatkan2@gmail.com",
-        password: "greatkany1234",
+        password: "greatKany@1234!",
       };
 
       serChai
@@ -190,7 +193,7 @@ describe("My brand API Testing", () => {
 
           serChai
             .post("/api/v1/users/login")
-            .send({ email: "julish123@gmail.com", password: "julish123" })
+            .send({ email: "julish123@gmail.com", password: "Julish@123" })
             .end((err, res) => {
               if (err) return done(err);
               let token = res.body.token;
@@ -213,7 +216,7 @@ describe("My brand API Testing", () => {
       const new_user = {
         full_name: "name emmy",
         email: "nameemmy@gmail.com",
-        password: "nameemmy123",
+        password: "Nameemmy123!",
       };
 
       serChai
@@ -225,7 +228,7 @@ describe("My brand API Testing", () => {
 
           serChai
             .post("/api/v1/users/login")
-            .send({ email: "julish123@gmail.com", password: "julish123" })
+            .send({ email: "julish123@gmail.com", password: "Julish@123" })
             .end((err, res) => {
               if (err) return done(err);
               let token = res.body.token;
@@ -251,7 +254,7 @@ describe("My brand API Testing", () => {
       const normalUser = {
         full_name: "Normal User",
         email: "normaluser@gmail.com",
-        password: "password123",
+        password: "paS$word123!",
       };
 
       // Sign up the normal user
@@ -266,11 +269,6 @@ describe("My brand API Testing", () => {
       normalUserToken = loginRes.body.token;
     });
 
-    // 2. Cleanup the normal user after
-    after(async () => {
-      await Users.deleteOne({ email: "normaluser@gmail.com" });
-    });
-
     it("should return 403 Forbidden when a normal user tries to access admin routes", async () => {
       const res = await serChai
         .get("/api/v1/users")
@@ -279,6 +277,11 @@ describe("My brand API Testing", () => {
       expect(res.status).to.equal(403);
       expect(res.body).to.have.property("status", "fail");
       expect(res.body).to.have.property("message", "Access Denied!");
+    });
+
+    // 2. Cleanup the normal user after
+    after(async () => {
+      await Users.deleteOne({ email: "normaluser@gmail.com" });
     });
   });
 
@@ -308,7 +311,7 @@ describe("My brand API Testing", () => {
     before(async () => {
       const res = await serChai
         .post("/api/v1/users/login")
-        .send({ email: "julish123@gmail.com", password: "julish123" });
+        .send({ email: "julish123@gmail.com", password: "Julish@123" });
       token = res.body.token;
     });
 
@@ -402,7 +405,7 @@ describe("My brand API Testing", () => {
     it("should GET all messages as an admin", (done) => {
       serChai
         .post("/api/v1/users/login")
-        .send({ email: "julish123@gmail.com", password: "julish123" })
+        .send({ email: "julish123@gmail.com", password: "Julish@123" })
         .end((err, res) => {
           let token = res.body.token;
           serChai
@@ -425,7 +428,7 @@ describe("My brand API Testing", () => {
 
       serChai
         .post("/api/v1/users/login")
-        .send({ email: "julish123@gmail.com", password: "julish123" })
+        .send({ email: "julish123@gmail.com", password: "Julish@123" })
         .end((err, res) => {
           let token = res.body.token;
           serChai
@@ -461,7 +464,7 @@ describe("My brand API Testing", () => {
     it("should GET all commet as an admin", (done) => {
       serChai
         .post("/api/v1/users/login")
-        .send({ email: "julish123@gmail.com", password: "julish123" })
+        .send({ email: "julish123@gmail.com", password: "Julish@123" })
         .end((err, res) => {
           let token = res.body.token;
           serChai
@@ -476,153 +479,6 @@ describe("My brand API Testing", () => {
     }).timeout(30000);
   });
 
-  // describe("Test Project Work API", () => {
-  //   let token;
-  //   let projectId;
-  //   let normalUserToken;
-
-  //   // 1. SETUP: Get Admin token and Normal User token
-  //   before(async () => {
-  //     // Login as Admin
-  //     const res = await serChai
-  //       .post("/api/v1/users/login")
-  //       .send({ email: "julish123@gmail.com", password: "julish123" });
-  //     token = res.body.token;
-
-  //     // Create a Normal User
-  //     await serChai.post("/api/v1/users/signUp").send({
-  //       full_name: "Normal User",
-  //       email: "normaluser@gmail.com",
-  //       password: "password123",
-  //     });
-
-  //     // Login as Normal User
-  //     const normalLogin = await serChai.post("/api/v1/users/login").send({
-  //       email: "normaluser@gmail.com",
-  //       password: "password123",
-  //     });
-  //     normalUserToken = normalLogin.body.token;
-  //   });
-
-  //   // CLEANUP
-  //   afterEach(async () => {
-  //     await Projects.deleteMany({ title: /Test Project/i });
-  //   });
-
-  //   after(async () => {
-  //     await Users.deleteOne({ email: "normaluser@gmail.com" });
-  //   });
-
-  //   // TEST 1: CREATE WITHOUT IMAGES
-  //   it("should create a new project without images (Admin only)", async () => {
-  //     const newProject = {
-  //       title: "Test Project One",
-  //       description: "A test project description",
-  //       techStack: "React, Node.Js, MongoDB",
-  //       githubLink: "https://github.com/test",
-  //       liveLink: "https://test.com",
-  //     };
-
-  //     const res = await serChai
-  //       .post("/api/v1/projects")
-  //       .set({ Cookie: `jwt=${token}` })
-  //       .send(newProject);
-
-  //     expect(res.status).to.equal(201);
-  //     expect(res.body.data.title).to.equal(newProject.title);
-  //     expect(res.body.data.techStack).to.be.an("array").that.includes("React");
-  //     expect(res.body.data.projectImages).to.be.an("array").that.is.empty;
-
-  //     // Save the ID for the next tests
-  //     projectId = res.body.data._id;
-  //   });
-
-  //   // TEST 2: CREATE WITH IMAGES
-  //   it("should create a new project with images (Admin only)", async () => {
-  //     const res = await serChai
-  //       .post("/api/v1/projects")
-  //       .set({ Cookie: `jwt=${token}` })
-  //       .field("title", "Test Project With Images")
-  //       .field("description", "Description here")
-  //       .field("techStack", "HTML, CSS, JS")
-
-  //       .attach("projectImages", "./test/test-image.png");
-
-  //     expect(res.status).to.equal(201);
-  //     expect(res.body.data.projectImages)
-  //       .to.be.an("array")
-  //       .that.has.lengthOf(1);
-  //     expect(res.body.data.projectImages[0]).to.include("cloudinary.com");
-  //   }).timeout(30000);
-
-  //   it("should get all projects (Public route)", async () => {
-  //     const res = await serChai.get("/api/v1/projects");
-
-  //     expect(res.status).to.equal(200);
-  //     expect(res.body.results).to.be.a("number");
-  //     expect(res.body.data).to.be.an("array");
-  //   });
-
-  //   // TEST 4: GET ONE (PUBLIC)
-  //   it("should get a single project by Id", async () => {
-  //     const res = await serChai.get(`/api/v1/projects/${projectId}`);
-
-  //     expect(res.status).to.equal(200);
-  //     expect(res.body.data._id).to.equal(projectId);
-  //   });
-
-  //   // TEST 5: UPDATE TEXT & REPLACE IMAGES
-  //   it("should update a project text and replace images", async () => {
-  //     const updateData = {
-  //       title: "Test Project Updated",
-  //       description: "Updated description",
-  //     };
-
-  //     const res = await serChai
-  //       .patch(`/api/v1/projects/${projectId}`)
-  //       .set({ Cookie: `jwt=${token}` })
-  //       .field("title", updateData.title) // Fixed: was sending description here
-  //       .field("description", updateData.description)
-  //       .attach("projectImages", "../test/test-image-new.png"); // Send a new image to trigger replacement
-
-  //     expect(res.status).to.equal(200);
-  //     expect(res.body.data.title).to.equal(updateData.title);
-  //     // Check inside res.body.data, not res.body
-  //     expect(res.body.data.projectImages)
-  //       .to.be.an("array")
-  //       .that.has.lengthOf(1);
-  //   });
-
-  //   // TEST 6: DELETE PROJECT
-  //   it("should delete a project and its images", async () => {
-  //     const res = await serChai
-  //       .delete(`/api/v1/projects/${projectId}`)
-  //       .set({ Cookie: `jwt=${token}` });
-
-  //     expect(res.status).to.equal(200);
-  //     // Fixed typo: successufully -> successfully
-  //     expect(res.body.message).to.equal("Project deleted successfully");
-
-  //     const checkDb = await Projects.findById(projectId);
-  //     expect(checkDb).to.be.null;
-  //   });
-
-  //   // TEST 7: SECURITY (403 FORBIDDEN)
-  //   it("should return 403 when a normal user tries to create a project", async () => {
-  //     const res = await serChai
-  //       .post("/api/v1/projects")
-  //       .set({ Cookie: `jwt=${normalUserToken}` }) // Fixed missing '=' sign
-  //       .send({
-  //         title: "Hacker Project",
-  //         description: "I shouldn't be here",
-  //         techStack: "Hacking",
-  //       });
-
-  //     expect(res.status).to.equal(403);
-  //     expect(res.body.message).to.equal("Access Denied!");
-  //   });
-  // });
-
   describe("Test Project Work API", () => {
     let token;
     let projectId;
@@ -632,25 +488,24 @@ describe("My brand API Testing", () => {
       // Login as Admin
       const res = await serChai
         .post("/api/v1/users/login")
-        .send({ email: "julish123@gmail.com", password: "julish123" });
+        .send({ email: "julish123@gmail.com", password: "Julish@123" });
       token = res.body.token;
 
       // Create a Normal User
       await serChai.post("/api/v1/users/signUp").send({
         full_name: "Normal User",
         email: "normaluser@gmail.com",
-        password: "password123",
+        password: "paS$word123!",
       });
 
       // Login as Normal User
       const normalLogin = await serChai.post("/api/v1/users/login").send({
         email: "normaluser@gmail.com",
-        password: "password123",
+        password: "paS$word123!",
       });
       normalUserToken = normalLogin.body.token;
     });
 
-    // ONLY CLEAN UP AT THE VERY END
     after(async () => {
       await Projects.deleteMany({ title: /Test Project/i });
       await Users.deleteOne({ email: "normaluser@gmail.com" });
@@ -703,7 +558,6 @@ describe("My brand API Testing", () => {
     });
 
     it("should get a single project by Id", async () => {
-      // Safety check: If projectId is somehow missing, create it quickly
       if (!projectId) {
         const resCreate = await serChai
           .post("/api/v1/projects")
@@ -732,7 +586,6 @@ describe("My brand API Testing", () => {
         .set({ Cookie: `jwt=${token}` })
         .field("title", updateData.title)
         .field("description", updateData.description)
-        // MAKE SURE THIS FILE EXISTS IN YOUR FOLDER!
         .attach("projectImages", "./test/test-image-new.png");
 
       expect(res.status).to.equal(200);
