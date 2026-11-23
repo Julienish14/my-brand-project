@@ -638,5 +638,17 @@ describe("My brand API Testing", () => {
       expect(res.body.status).to.equal("fail");
       expect(res.body.message).to.include("Invalid");
     });
+
+    it("should return 400 if a non-image file is uploaded", async () => {
+      const res = await serChai
+        .post("/api/v1/projects")
+        .field("title", "Test Project Bad File")
+        .field("description", "Desc")
+        .field("techStack", "JS")
+        .attach("projectImages", "./test/test.txt");
+
+      expect(res.status).to.equal(400);
+      expect(res.body.status).to.equal("fail");
+    });
   });
 });
