@@ -25,7 +25,17 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  if (err instanceof multer.MulterError) {
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      status: "fail",
+      message: `Invalid ID format. Please provide a vlid MongoDB ID.`,
+    });
+  }
+
+  if (
+    err instanceof multer.MulterError ||
+    err.message.includes("Invalid file type")
+  ) {
     return res.status(400).json({
       status: "fail",
       message: `Upload Error: ${err.message}`,
